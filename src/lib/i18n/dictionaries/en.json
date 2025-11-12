@@ -1,0 +1,22 @@
+{
+	"nav": {
+		"about": "O nás",
+		"catalog": "Katalog pozemků",
+		"contact": "Kontakt"
+	},
+	"hero": {
+		"headline": "Investujte do pozemků v ",
+		"headline2": "Indonésii",
+		"sub_line": "Váš kousek ráje, který roste na hodnotě",
+		"text": "Objevte jedinečnou příležitost vlastnit pozemek v Indonésii – destinaci s rostoucí hodnotou a obrovským potenciálem pro pronájem. Spojte exotický životní styl s bezpečnou a výnosnou investicí.",
+		"more": "Více informací"
+	},
+	"home_points": {
+        "why_title":"Proč investovat v Indonésii",
+        "why_text":"Explore the rich culture and stunning landscapes of Indonesia.",
+        "plan_title":"Plan Your Trip",
+        "plan_text":"Get tips and guides to make your trip unforgettable.",
+        "experience_title":"Experience Local Life",
+        "experience_text":"Immerse yourself in the traditions and daily life of locals."
+    }
+}

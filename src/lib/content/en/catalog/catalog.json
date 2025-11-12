@@ -1,0 +1,99 @@
+[
+	{
+		"id": "001",
+		"name": "Villa Park CAÑAZA",
+		"title": "Beachside living at Villa Park CAÑAZA",
+		"investment": 3652500,
+		"currency": "USD",
+		"paragraphs": [
+			"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer tempor. Ut tempus purus at lorem. Etiam bibendum elit eget erat. Fusce consectetuer risus a nunc. Cras pede libero, dapibus nec"
+		],
+		"coverImg": {
+			"small": {
+				"1x": "images/pages/catalog/hero-sm.jpg",
+				"2x": "images/pages/catalog/hero-sm@2x.jpg"
+			},
+			"large": {
+				"1x": "images/pages/catalog/hero.jpg",
+				"2x": "images/pages/catalog/hero@2x.jpg"
+			}
+		},
+		"imageSrc": ["images/pages/catalog/canaza_beach_park.jpg"],
+		"area": 12360,
+		"plot_count": 25,
+		"estate_count": 5
+	},
+	{
+		"id": "002",
+		"name": "Wainyapu Sumba",
+		"title": "Wainyapu Sumba",
+		"investment": 6652500,
+		"currency": "USD",
+		"paragraphs": [
+			"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer tempor. Ut tempus purus at lorem. Etiam bibendum elit eget erat. Fusce consectetuer risus a nunc. Cras pede libero, dapibus nec"
+		],
+		"coverImg": {
+			"small": {
+				"1x": "images/pages/catalog/hero-sm.jpg",
+				"2x": "images/pages/catalog/hero-sm@2x.jpg"
+			},
+			"large": {
+				"1x": "images/pages/catalog/hero.jpg",
+				"2x": "images/pages/catalog/hero@2x.jpg"
+			}
+		},
+		"imageSrc": ["images/pages/catalog/wainyapu_sumba.jpg"],
+		"area": 12360,
+		"plot_count": 120,
+		"estate_count": 15
+	},
+	{
+		"id": "003",
+
+		"name": "Villa Park CAÑAZA",
+		"title": "Beachside living at Villa Park CAÑAZA",
+		"investment": 3652500,
+		"currency": "USD",
+		"coverImg": {
+			"small": {
+				"1x": "images/pages/catalog/hero-sm.jpg",
+				"2x": "images/pages/catalog/hero-sm@2x.jpg"
+			},
+			"large": {
+				"1x": "images/pages/catalog/hero.jpg",
+				"2x": "images/pages/catalog/hero@2x.jpg"
+			}
+		},
+		"paragraphs": [
+			"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer tempor. Ut tempus purus at lorem. Etiam bibendum elit eget erat. Fusce consectetuer risus a nunc. Cras pede libero, dapibus nec"
+		],
+		"imageSrc": ["images/pages/catalog/cat_3.jpg"],
+		"area": 12360,
+		"plot_count": 25,
+		"estate_count": 5
+	},
+	{
+		"id": "004",
+		"name": "Wainyapu Sumba",
+		"title": "Wainyapu Sumba",
+		"investment": 6652500,
+		"currency": "USD",
+		"coverImg": {
+			"small": {
+				"1x": "images/pages/catalog/hero-sm.jpg",
+				"2x": "images/pages/catalog/hero-sm@2x.jpg"
+			},
+			"large": {
+				"1x": "images/pages/catalog/hero.jpg",
+				"2x": "images/pages/catalog/hero@2x.jpg"
+			}
+		},
+		"paragraphs": [
+			"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer tempor. Ut tempus purus at lorem. Etiam bibendum elit eget erat. Fusce consectetuer risus a nunc. Cras pede libero, dapibus nec"
+		],
+		"imageSrc": ["images/pages/catalog/cat_4.jpg"],
+		"area": 12360,
+		"plot_count": 120,
+		"estate_count": 15
+	}
+]
