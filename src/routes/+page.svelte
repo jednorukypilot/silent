@@ -24,7 +24,7 @@
 	const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 	function recomputeWeights() {
-		if (!scroller) return;
+		if (!scroller || typeof window === 'undefined') return;
 
 		const rootRect = scroller.getBoundingClientRect();
 		const centerY = rootRect.top + rootRect.height / 2;
@@ -49,19 +49,29 @@
 
 	let raf = 0;
 	function onScroll() {
-		cancelAnimationFrame(raf);
-		raf = requestAnimationFrame(recomputeWeights);
+		if (typeof cancelAnimationFrame !== 'undefined') {
+			cancelAnimationFrame(raf);
+		}
+		if (typeof requestAnimationFrame !== 'undefined') {
+			raf = requestAnimationFrame(recomputeWeights);
+		}
 	}
 
 	onMount(async () => {
 		await tick();
 		recomputeWeights();
-		window.addEventListener('resize', recomputeWeights);
+		if (typeof window !== 'undefined') {
+			window.addEventListener('resize', recomputeWeights);
+		}
 	});
 
 	onDestroy(() => {
-		cancelAnimationFrame(raf);
-		window.removeEventListener('resize', recomputeWeights);
+		if (typeof cancelAnimationFrame !== 'undefined') {
+			cancelAnimationFrame(raf);
+		}
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('resize', recomputeWeights);
+		}
 	});
 </script>
 
