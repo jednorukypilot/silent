@@ -6,11 +6,9 @@
 	export let buttonStyle: ButtonStyle = ButtonStyle.PRIMARY;
 
 	$: buttonClasses = `${
-		buttonStyle === ButtonStyle.GREEN
-			? 'border-primary bg-primary text-gray-100 hover:bg-[#1b742f]'
-			: buttonStyle === ButtonStyle.PRIMARY
-				? 'border-secondary bg-secondary text-gray-900 hover:bg-[#cc9b38]'
-				: 'border-secondary text-accent bg-transparent hover:bg-[#ffdda0]'
+		buttonStyle === ButtonStyle.PRIMARY
+			? 'border-secondary bg-secondary text-gray-900 hover:bg-[#cc9b38]'
+			: 'border-secondary text-accent bg-transparent hover:bg-[#ffdda0]'
 	}`;
 </script>
 

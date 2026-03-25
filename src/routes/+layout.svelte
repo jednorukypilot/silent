@@ -1,12 +1,10 @@
 <script lang="ts">
-	import TopBar from '$lib/components/TopBar.svelte';
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import '../app.css';
+	import OverlayHero from '$lib/components/OverlayHero.svelte';
 	import '$lib/i18n';
+	import '../app.css';
 
-	import { locale, t } from 'svelte-i18n';
 	import type { Lang } from '$lib/i18n';
-	import Footer from '$lib/components/Footer.svelte';
+	import { locale } from 'svelte-i18n';
 
 	let { data, children } = $props<{ data: { lang: Lang }; children: any }>();
 
@@ -21,11 +19,16 @@
 		document.cookie = `lang=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
 		location.reload();
 	}
+
+	function handleIntroDone() {
+		console.log('intro finished');
+		// put any external behavior here
+	}
 </script>
 
-<div class="flex min-h-screen flex-col">
-	<!-- <TopBar />
-	<Sidebar /> -->
-	{@render children()}
-	<!-- <Footer /> -->
+<div class="relative h-screen overflow-hidden">
+	<OverlayHero onIntroDone={handleIntroDone} />
+	<div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden">
+		{@render children()}
+	</div>
 </div>

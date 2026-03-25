@@ -1,6 +1,7 @@
 <script lang="ts">
 	import StillsRow from '$lib/components/StillsRow.svelte';
 	import { onMount, onDestroy, tick } from 'svelte';
+	import { browser } from '$app/environment';
 
 	const titles = [
 		'First',
@@ -15,16 +16,15 @@
 	];
 
 	let scroller: HTMLDivElement | null = null;
+	let menu: HTMLDivElement | null = null;
 	let sections: (HTMLElement | null)[] = Array(titles.length).fill(null);
-
 	let weights: number[] = Array(titles.length).fill(0);
 
 	const bandInViewHeights = 1.6;
-
 	const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 	function recomputeWeights() {
-		if (!scroller || typeof window === 'undefined') return;
+		if (!browser || !scroller) return;
 
 		const rootRect = scroller.getBoundingClientRect();
 		const centerY = rootRect.top + rootRect.height / 2;
@@ -48,53 +48,71 @@
 	}
 
 	let raf = 0;
+
 	function onScroll() {
-		if (typeof cancelAnimationFrame !== 'undefined') {
-			cancelAnimationFrame(raf);
-		}
-		if (typeof requestAnimationFrame !== 'undefined') {
-			raf = requestAnimationFrame(recomputeWeights);
-		}
+		if (!browser) return;
+
+		window.cancelAnimationFrame(raf);
+		raf = window.requestAnimationFrame(recomputeWeights);
+	}
+
+	function setScrollFromPointer(clientY: number) {
+		if (!browser || !menu || !scroller) return;
+
+		const rect = menu.getBoundingClientRect();
+		const ratio = clamp01((clientY - rect.top) / rect.height);
+
+		const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+		scroller.scrollTop = ratio * maxScroll;
+	}
+
+	function handleMenuMouseMove(e: MouseEvent) {
+		setScrollFromPointer(e.clientY);
+	}
+
+	function handleMenuEnter(e: MouseEvent) {
+		setScrollFromPointer(e.clientY);
 	}
 
 	onMount(async () => {
 		await tick();
 		recomputeWeights();
-		if (typeof window !== 'undefined') {
-			window.addEventListener('resize', recomputeWeights);
-		}
+		window.addEventListener('resize', recomputeWeights);
 	});
 
 	onDestroy(() => {
-		if (typeof cancelAnimationFrame !== 'undefined') {
-			cancelAnimationFrame(raf);
-		}
-		if (typeof window !== 'undefined') {
-			window.removeEventListener('resize', recomputeWeights);
-		}
+		if (!browser) return;
+
+		window.cancelAnimationFrame(raf);
+		window.removeEventListener('resize', recomputeWeights);
 	});
 </script>
 
-<div class="flex h-screen w-full flex-row">
-	<div class="flex w-1/3 flex-col items-start justify-center p-8">
-		{#each titles as title, i}
-			<button
-				type="button"
-				class="mt-4 text-left text-lg transition-all"
-				style="
-					font-weight: {Math.round(400 + weights[i] * 500)};
-					opacity: {0.35 + weights[i] * 0.65};
-				"
-				on:mouseover={() => {
-					sections[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-				}}
-				on:focus={() => {
-					sections[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-				}}
-			>
-				{title}
-			</button>
-		{/each}
+<div class="flex h-full w-full flex-row">
+	<div class="flex w-1/3 items-center bg-blue-50">
+		<div
+			class="flex w-2/3 flex-col justify-center bg-gray-50 px-8 py-2"
+			bind:this={menu}
+			role="region"
+			on:mouseenter={handleMenuEnter}
+			on:mousemove={handleMenuMouseMove}
+		>
+			{#each titles as title, i}
+				<button
+					type="button"
+					class="mt-4 text-left text-lg transition-all"
+					style="
+						font-weight: {Math.round(400 + weights[i] * 500)};
+						opacity: {0.35 + weights[i] * 0.65};
+					"
+					on:focus={() => {
+						sections[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}}
+				>
+					{title}
+				</button>
+			{/each}
+		</div>
 	</div>
 
 	<div
