@@ -65,7 +65,7 @@
 		e.preventDefault();
 
 		// only react to scrolling down
-		if (e.deltaY <= 0) return;
+		// if (e.deltaY <= 0) return;
 
 		progress = clamp(progress + e.deltaY * SCROLL_SPEED, 0, HERO_TRAVEL);
 
