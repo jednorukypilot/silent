@@ -92,7 +92,7 @@
 
 {#if !introDone}
 	<div
-		class="fixed inset-0 z-50 cursor-pointer bg-blue-600 will-change-transform"
+		class="fixed inset-0 z-50 cursor-pointer bg-teal-600 will-change-transform"
 		style={heroStyle}
 		onclick={animateToEnd}
 		role="button"

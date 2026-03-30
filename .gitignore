@@ -7,6 +7,8 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+/app/.svelte-kit
+/app/build
 
 # OS
 .DS_Store
@@ -33,3 +35,5 @@ venv/
 env/
 
 works/
+uploader/works/
+uploader/.venv/
