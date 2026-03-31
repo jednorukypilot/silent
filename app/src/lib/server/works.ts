@@ -69,8 +69,8 @@ export async function getHomeTiles(): Promise<WorksData[]> {
 	console.log('Fetched works for home tiles:', works);
 
 	works.sort((a, b) => {
-		const orderA = a.displayed;
-		const orderB = b.displayed;
+		const orderA = a.displayed!;
+		const orderB = b.displayed!;
 
 		return orderA - orderB;
 	});

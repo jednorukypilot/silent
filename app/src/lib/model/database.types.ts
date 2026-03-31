@@ -7,7 +7,7 @@ export type Database = {
 				Row: {
 					id: string;
 					created_at: string;
-					displayed: number;
+					displayed: number | null;
 					video_link: string | null;
 					name: string;
 					description: string | null;
@@ -17,7 +17,7 @@ export type Database = {
 				Insert: {
 					id?: string;
 					created_at?: string;
-					displayed?: number;
+					displayed?: number | null;
 					video_link?: string | null;
 					name: string;
 					description?: string | null;
@@ -27,7 +27,7 @@ export type Database = {
 				Update: {
 					id?: string;
 					created_at?: string;
-					displayed?: number;
+					displayed?: number | null;
 					video_link?: string | null;
 					name?: string;
 					description?: string | null;
