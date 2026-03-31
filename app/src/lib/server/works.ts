@@ -1,6 +1,6 @@
 import type { QueryData } from '@supabase/supabase-js';
 import type { DbWorkStill, WorksData } from '$lib/model/types';
-import { supabaseServerClient } from '$lib/server/client';
+import { getSupabaseServerClient } from '$lib/server/client';
 
 const displayedWorksSelection = `
   id,
@@ -22,7 +22,7 @@ const displayedWorksSelection = `
 `;
 
 function createDisplayedWorksQuery() {
-	return supabaseServerClient
+	return getSupabaseServerClient()
 		.from('works')
 		.select(displayedWorksSelection)
 		.not('displayed', 'is', null)
@@ -79,7 +79,7 @@ export async function getHomeTiles(): Promise<WorksData[]> {
 }
 
 export async function getWorkById(id: string): Promise<DisplayedWorkRow> {
-	const { data, error } = await supabaseServerClient
+	const { data, error } = await getSupabaseServerClient()
 		.from('works')
 		.select(displayedWorksSelection)
 		.eq('id', id)

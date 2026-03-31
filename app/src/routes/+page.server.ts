@@ -1,8 +1,14 @@
 import { getHomeTiles } from '$lib/server/works';
 import { error } from '@sveltejs/kit';
+import { hasSupabaseServerConfig } from '$lib/server/client';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
+	if (!hasSupabaseServerConfig) {
+		console.warn('Supabase server configuration is missing. Returning no home tiles.');
+		return { tiles: [] };
+	}
+
 	try {
 		const tiles = await getHomeTiles();
 
