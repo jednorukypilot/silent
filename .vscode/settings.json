@@ -1,5 +1,5 @@
 {
-  "cSpell.words": [],
+  "cSpell.words": ["SUPABASE"],
   "python.terminal.activateEnvironment": false,
   "python.defaultInterpreterPath": "${workspaceFolder}/uploader/.venv/Scripts/python.exe"
 }

@@ -1,8 +1,8 @@
-import type { CatalogData } from '$lib/types';
-import { base } from '$app/paths';
+import type { CatalogData } from '$lib/model/types';
+import { asset } from '$lib/utils/paths';
 
 function prefixPath(path: string): string {
-	return `${base}/${path}`;
+	return asset(path);
 }
 
 export function createCatalogData(raw: any): CatalogData {

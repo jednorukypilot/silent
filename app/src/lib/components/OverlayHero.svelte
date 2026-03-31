@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { MENU_TILES } from '$lib/model/menu';
 	import { onMount } from 'svelte';
 
 	type Props = {
@@ -114,6 +115,10 @@
 	</div>
 {/if}
 
-<div class="fixed top-0 right-0 left-0 z-40 flex h-16 items-center bg-pink-400 px-6 text-white">
-	Classic Top Bar
+<div
+	class="fixed top-0 right-0 left-0 z-40 flex h-16 w-full flex-row items-center justify-center gap-8 bg-pink-400 px-6 text-white"
+>
+	{#each MENU_TILES as tile}
+		<a href={tile.href} class="text-sm underline">{tile.title}</a>
+	{/each}
 </div>

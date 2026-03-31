@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ButtonStyle } from '$lib/enums';
+	import { ButtonStyle } from '$lib/model/enums';
 
 	export let label: string;
 	export let href: string = '#';

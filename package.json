@@ -9,5 +9,8 @@
     "check": "npm --prefix app run check",
     "lint": "npm --prefix app run lint",
     "format": "npm --prefix app run format"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.101.0"
   }
 }
