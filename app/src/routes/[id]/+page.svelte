@@ -55,7 +55,9 @@
 		<div class="flex flex-col items-start justify-start gap-2 bg-white px-8 py-4 text-black">
 			<div class="flex w-full flex-row items-start justify-between gap-10 overflow-hidden">
 				<h1 class="text-4xl">{data.work.title}</h1>
-				<p class="text-sm tracking-[0.3em] text-black/60 uppercase">{data.work.id}</p>
+				<p class="hidden text-sm tracking-[0.3em] text-black/60 uppercase xl:inline">
+					{data.work.id}
+				</p>
 			</div>
 			<p class="text-lg text-black/80">{data.work.year}</p>
 			<div

@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import HorizontalWorkViewer from '$lib/components/home/HorizontalWorkViewer.svelte';
 	import ScrollableTiles from '$lib/components/home/ScrollableTiles.svelte';
 	import OverlayHero from '$lib/components/OverlayHero.svelte';
 	import type { PageData } from './$types';
 
-	let { data } = $props<{ data: PageData }>();
+	let { data }: { data: PageData } = $props();
 	type HeroPageState = { skipHero?: boolean };
 
 	const shouldShowHero = $derived(!Boolean((page.state as HeroPageState | undefined)?.skipHero));
@@ -16,5 +17,10 @@
 	{#if shouldShowHero}
 		<OverlayHero onIntroDone={handleIntroDone} />
 	{/if}
-	<ScrollableTiles tileData={data.tiles} />
+	<div class="hidden h-full w-full md:block">
+		<ScrollableTiles tileData={data.tiles} />
+	</div>
+	<div class="block h-full w-full md:hidden">
+		<HorizontalWorkViewer tileData={data.tiles} />
+	</div>
 </div>

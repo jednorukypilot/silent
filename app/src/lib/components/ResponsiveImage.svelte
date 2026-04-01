@@ -5,7 +5,8 @@
 		alt = '',
 		aspectRatio,
 		sizes = '(min-width: 1200px) 33vw, (min-width: 700px) 50vw, 100vw',
-		eager = false
+		eager = false,
+		objectFit = 'cover'
 	}: {
 		imageUrls: {
 			w480: string;
@@ -17,6 +18,7 @@
 		aspectRatio: number;
 		sizes?: string;
 		eager?: boolean;
+		objectFit?: 'cover' | 'contain';
 	} = $props();
 
 	let loaded = $state(false);
@@ -44,6 +46,7 @@
 			{srcset}
 			{sizes}
 			{alt}
+			style={`object-fit: ${objectFit};`}
 			loading={eager ? 'eager' : 'lazy'}
 			decoding="async"
 			fetchpriority={eager ? 'high' : 'auto'}

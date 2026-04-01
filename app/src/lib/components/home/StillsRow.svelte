@@ -20,10 +20,11 @@
 		.join(' / ');
 </script>
 
-<article class="group w-full bg-white" style={`aspect-ratio: ${rowAspectRatio};`}>
+<article class="group w-full bg-white">
 	<div class="flex h-full w-full flex-col gap-3 overflow-hidden pb-5">
 		<button
 			class="grid h-full w-full grid-cols-3 overflow-hidden hover:cursor-pointer"
+			style={`aspect-ratio: ${rowAspectRatio};`}
 			on:click={() => goto(resolve(`/${tile.id}`))}
 		>
 			{#each displayedStills as still, index}
