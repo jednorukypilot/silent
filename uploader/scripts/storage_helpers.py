@@ -53,7 +53,7 @@ def insert_work(
     description: Optional[str],
     aspect_ratio: float,
     year: Optional[int],
-    displayed: bool,
+    displayed: Optional[int],
     video_link: Optional[str],
     dry_run: bool = False,
 ):

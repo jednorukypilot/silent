@@ -1,10 +1,20 @@
 import json
 from pathlib import Path
 import uuid
-from typing import cast
+from typing import Optional, cast
 
 from scripts.image_helpers import VARIANT_WIDTHS, compute_aspect_ratio, open_image
 from scripts.storage_helpers import insert_work, insert_work_still, upload_original, upload_variants
+
+
+def validate_displayed(value: object) -> Optional[int]:
+    if value is None:
+        return None
+
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise TypeError(f"displayed must be an integer or null; got {type(value).__name__}")
+
+    return value
 
 
 def load_meta(work_dir: Path) -> dict:
@@ -18,7 +28,7 @@ def load_meta(work_dir: Path) -> dict:
         "name": meta["name"],
         "description": meta.get("description"),
         "year": meta.get("year"),
-        "displayed": meta.get("displayed", True),
+        "displayed": validate_displayed(meta.get("displayed")),
         "video_link": meta.get("video_link"),
     }
 
