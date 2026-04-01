@@ -5,4 +5,6 @@
 	export let data: PageData;
 </script>
 
-<ScrollableTiles tileData={data.tiles} />
+<div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden">
+	<ScrollableTiles tileData={data.tiles} />
+</div>

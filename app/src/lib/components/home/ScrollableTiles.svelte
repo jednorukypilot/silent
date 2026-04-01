@@ -3,6 +3,8 @@
 	import type { WorksData } from '$lib/model/types';
 	import { onDestroy, onMount, tick } from 'svelte';
 	import StillsRow from './StillsRow.svelte';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	export let tileData: WorksData[] = [];
 
@@ -85,7 +87,7 @@
 <div class="flex h-full w-full flex-row">
 	<div class="hidden w-1/3 items-center bg-white xl:flex">
 		<div
-			class="3xl:w-2/3 flex w-full flex-col justify-center bg-white px-8 py-2"
+			class="flex w-full flex-col justify-center bg-white px-8 py-2 2xl:w-2/3"
 			bind:this={menu}
 			role="region"
 			on:mouseenter={handleMenuEnter}
@@ -94,7 +96,7 @@
 			{#each tileData as tile, index (tile.id)}
 				<button
 					type="button"
-					class="mt-4 text-left text-xl transition-all"
+					class="mt-4 text-left text-xl transition-all hover:cursor-pointer"
 					style="
 						font-weight: {Math.round(200 + weights[index] * 300)};
 						opacity: {0.35 + weights[index] * 2.5};
@@ -102,8 +104,14 @@
 					on:focus={() => {
 						sections[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 					}}
+					on:click={() => {
+						// navigate to the tiles page
+						sections[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+						menu?.blur();
+						goto(resolve(`/${tile.id}`));
+					}}
 				>
-					<span class="inline text-sm opacity-25">{weights[index].toFixed(2)}</span>
+					<span class="hidden text-sm opacity-25 2xl:inline">{weights[index].toFixed(2)}</span>
 					{tile.title}
 				</button>
 			{/each}
@@ -116,9 +124,14 @@
 		class="flex w-full flex-col gap-4 overflow-y-scroll py-8"
 	>
 		{#each tileData as tile, index (tile.id)}
-			<section bind:this={sections[index]}>
+			<div
+				bind:this={sections[index]}
+				role="region"
+				on:mouseenter={() => (weights[index] = 1.3)}
+				on:mouseleave={() => recomputeWeights()}
+			>
 				<StillsRow {tile} />
-			</section>
+			</div>
 		{/each}
 	</div>
 </div>

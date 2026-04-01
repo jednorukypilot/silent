@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
 	import type { WorksData } from '$lib/model/types';
 
@@ -20,7 +22,10 @@
 
 <article class="group w-full bg-white" style={`aspect-ratio: ${rowAspectRatio};`}>
 	<div class="flex h-full w-full flex-col gap-3 overflow-hidden pb-5">
-		<div class="grid h-full w-full grid-cols-3 overflow-hidden">
+		<button
+			class="grid h-full w-full grid-cols-3 overflow-hidden hover:cursor-pointer"
+			on:click={() => goto(resolve(`/${tile.id}`))}
+		>
 			{#each displayedStills as still, index}
 				<div class="h-full bg-neutral-800">
 					{#if still}
@@ -37,7 +42,7 @@
 					{/if}
 				</div>
 			{/each}
-		</div>
+		</button>
 		<div class="flex items-baseline gap-10 overflow-hidden">
 			<h2 class="text-xl font-semibold text-black">{tile.title}</h2>
 			{#if hoverDetails}

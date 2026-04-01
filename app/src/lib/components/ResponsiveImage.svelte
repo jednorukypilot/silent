@@ -69,16 +69,15 @@
 		background:
 			linear-gradient(
 				115deg,
-				rgba(255, 255, 255, 0.05) 20%,
-				rgba(255, 255, 255, 0.18) 32%,
-				rgba(255, 255, 255, 0.05) 44%
+				rgba(87, 87, 87, 0.05) 20%,
+				rgba(27, 27, 27, 0.18) 32%,
+				rgba(51, 51, 51, 0.05) 44%
 			),
-			linear-gradient(180deg, rgba(17, 24, 39, 0.7), rgba(17, 24, 39, 0.95));
+			linear-gradient(180deg, rgba(41, 41, 41, 0.7), rgba(17, 24, 39, 0.95));
 		background-size:
 			220% 100%,
 			100% 100%;
-		animation: shimmer 1.8s linear infinite;
-		transition: opacity 220ms ease;
+		animation: shimmer 5.8s linear infinite;
 		pointer-events: none;
 	}
 
@@ -90,9 +89,7 @@
 		object-fit: cover;
 		opacity: 0;
 		transform: scale(1.035);
-		transition:
-			opacity 280ms ease,
-			transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+		transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
 	}
 
 	.image-shell.is-loaded .image-placeholder {

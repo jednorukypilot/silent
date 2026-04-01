@@ -26,9 +26,7 @@
 	}
 </script>
 
-<div class="relative h-screen overflow-hidden">
+<div class="relative h-screen">
 	<OverlayHero onIntroDone={handleIntroDone} />
-	<div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden">
-		{@render children()}
-	</div>
+	{@render children()}
 </div>
