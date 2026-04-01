@@ -89,11 +89,12 @@
 	});
 
 	const heroStyle = $derived(`transform: translateY(-${progress * 100}vh);`);
+	const menuStyle = $derived(`max-width: min(${MENU_TILES.length * 16}rem, 1200px);`);
 </script>
 
 {#if !introDone}
 	<div
-		class="fixed inset-0 z-50 cursor-pointer bg-teal-600 will-change-transform"
+		class="fixed inset-0 z-50 cursor-pointer bg-black will-change-transform"
 		style={heroStyle}
 		onclick={animateToEnd}
 		role="button"
@@ -106,19 +107,18 @@
 		}}
 	>
 		<div class="flex h-[calc(100vh-4rem)] items-center justify-center">
-			<div
-				class="flex h-56 w-56 items-center justify-center bg-pink-400 text-2xl font-bold text-black"
-			>
-				HERO
-			</div>
+			<div class="flex h-56 w-56 items-center justify-center bg-white text-7xl text-black">kt</div>
 		</div>
 	</div>
 {/if}
 
-<div
-	class="fixed top-0 right-0 left-0 z-40 flex h-16 w-full flex-row items-center justify-center gap-8 bg-pink-400 px-6 text-white"
->
-	{#each MENU_TILES as tile}
-		<a href={tile.href} class="text-sm underline">{tile.title}</a>
-	{/each}
+<div class="fixed top-0 right-0 left-0 z-40 flex h-16 w-full justify-center bg-black">
+	<div
+		class="container flex h-full items-center justify-evenly gap-6 px-4 text-white"
+		style={menuStyle}
+	>
+		{#each MENU_TILES as tile}
+			<a href={tile.href} class="text-sm">{tile.title}</a>
+		{/each}
+	</div>
 </div>

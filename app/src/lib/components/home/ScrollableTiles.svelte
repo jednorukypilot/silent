@@ -83,9 +83,9 @@
 </script>
 
 <div class="flex h-full w-full flex-row">
-	<div class="flex w-1/3 items-center bg-blue-50">
+	<div class="hidden w-1/3 items-center bg-white xl:flex">
 		<div
-			class="flex w-2/3 flex-col justify-center bg-gray-50 px-8 py-2"
+			class="3xl:w-2/3 flex w-full flex-col justify-center bg-white px-8 py-2"
 			bind:this={menu}
 			role="region"
 			on:mouseenter={handleMenuEnter}
@@ -94,15 +94,16 @@
 			{#each tileData as tile, index (tile.id)}
 				<button
 					type="button"
-					class="mt-4 text-left text-lg transition-all"
+					class="mt-4 text-left text-xl transition-all"
 					style="
-						font-weight: {Math.round(400 + weights[index] * 500)};
-						opacity: {0.35 + weights[index] * 0.65};
+						font-weight: {Math.round(200 + weights[index] * 300)};
+						opacity: {0.35 + weights[index] * 2.5};
 					"
 					on:focus={() => {
 						sections[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 					}}
 				>
+					<span class="inline text-sm opacity-25">{weights[index].toFixed(2)}</span>
 					{tile.title}
 				</button>
 			{/each}
@@ -112,7 +113,7 @@
 	<div
 		bind:this={scroller}
 		on:scroll={onScroll}
-		class="flex w-full flex-col gap-4 overflow-y-scroll py-4"
+		class="flex w-full flex-col gap-4 overflow-y-scroll py-8"
 	>
 		{#each tileData as tile, index (tile.id)}
 			<section bind:this={sections[index]}>
