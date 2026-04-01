@@ -4,6 +4,10 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
+		"generate:home-tiles": "node ./scripts/generate-home-tiles.mjs",
+		"predev": "yarn run generate:home-tiles",
+		"prebuild": "yarn run generate:home-tiles",
+		"precheck": "yarn run generate:home-tiles",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
