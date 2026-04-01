@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { MENU_TILES } from '$lib/model/menu';
 	import { onMount } from 'svelte';
 
 	type Props = {
@@ -89,7 +88,6 @@
 	});
 
 	const heroStyle = $derived(`transform: translateY(-${progress * 100}vh);`);
-	const menuStyle = $derived(`max-width: min(${MENU_TILES.length * 16}rem, 1200px);`);
 </script>
 
 {#if !introDone}
@@ -111,14 +109,3 @@
 		</div>
 	</div>
 {/if}
-
-<div class="fixed top-0 right-0 left-0 z-40 flex h-16 w-full justify-center bg-black">
-	<div
-		class="container flex h-full items-center justify-evenly gap-6 px-4 text-white"
-		style={menuStyle}
-	>
-		{#each MENU_TILES as tile}
-			<a href={tile.href} class="text-sm">{tile.title}</a>
-		{/each}
-	</div>
-</div>

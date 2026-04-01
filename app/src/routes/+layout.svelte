@@ -1,10 +1,10 @@
 <script lang="ts">
-	import OverlayHero from '$lib/components/OverlayHero.svelte';
 	import '$lib/i18n';
 	import '../app.css';
 
 	import type { Lang } from '$lib/i18n';
 	import { locale } from 'svelte-i18n';
+	import TopBar from '$lib/components/TopBar.svelte';
 
 	let { data, children } = $props<{ data: { lang: Lang }; children: any }>();
 
@@ -19,14 +19,9 @@
 		document.cookie = `lang=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
 		location.reload();
 	}
-
-	function handleIntroDone() {
-		console.log('intro finished');
-		// put any external behavior here
-	}
 </script>
 
 <div class="relative h-screen">
-	<OverlayHero onIntroDone={handleIntroDone} />
+	<TopBar />
 	{@render children()}
 </div>

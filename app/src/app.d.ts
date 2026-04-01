@@ -4,10 +4,12 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-            lang: import('$lib/i18n').Lang;
-        }
+			lang: import('$lib/i18n').Lang;
+		}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			skipHero?: boolean;
+		}
 		// interface Platform {}
 	}
 }
