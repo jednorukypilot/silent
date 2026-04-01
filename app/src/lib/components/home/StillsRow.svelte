@@ -24,7 +24,8 @@
 			<div class="relative h-full min-w-0 overflow-hidden bg-neutral-900">
 				{#if still}
 					<ResponsiveImage
-						fileKey={still.fileKey}
+						imageUrls={still.imageUrls}
+						debugLabel={`${tile.title} still ${index + 1} (${still.id})`}
 						alt={still.alt ?? `${tile.title} still ${index + 1}`}
 						aspectRatio={stillAspectRatio}
 						sizes="(min-width: 1400px) 22vw, (min-width: 1024px) 28vw, (min-width: 768px) 40vw, 88vw"

@@ -1,14 +1,18 @@
 <script lang="ts">
-	import { imageUrl } from '$lib/utils/imageUrl';
-
 	let {
-		fileKey,
+		imageUrls,
+		debugLabel = 'unknown image',
 		alt = '',
 		aspectRatio,
 		sizes = '(min-width: 1200px) 33vw, (min-width: 700px) 50vw, 100vw',
 		eager = false
 	}: {
-		fileKey: string;
+		imageUrls: {
+			w480: string;
+			w960: string;
+			w1600: string;
+		};
+		debugLabel?: string;
 		alt?: string;
 		aspectRatio: number;
 		sizes?: string;
@@ -16,26 +20,38 @@
 	} = $props();
 
 	let loaded = $state(false);
+	let hasLoggedMissingImageUrls = false;
+	const hasImageUrls = $derived(Boolean(imageUrls?.w480 && imageUrls?.w960 && imageUrls?.w1600));
+	const srcset = $derived(
+		hasImageUrls
+			? `${imageUrls.w480} 480w, ${imageUrls.w960} 960w, ${imageUrls.w1600} 1600w`
+			: undefined
+	);
+
+	$effect(() => {
+		if (!hasImageUrls && !hasLoggedMissingImageUrls) {
+			hasLoggedMissingImageUrls = true;
+			console.warn(`[ResponsiveImage] Missing imageUrls for ${debugLabel}`, { imageUrls, alt });
+		}
+	});
 </script>
 
 <div class="image-shell" class:is-loaded={loaded} style={`aspect-ratio: ${aspectRatio};`}>
 	<div class="image-placeholder" aria-hidden="true"></div>
-	<img
-		src={imageUrl(fileKey, 'w960')}
-		srcset={`
-      ${imageUrl(fileKey, 'w480')} 480w,
-      ${imageUrl(fileKey, 'w960')} 960w,
-      ${imageUrl(fileKey, 'w1600')} 1600w
-    `}
-		{sizes}
-		{alt}
-		loading={eager ? 'eager' : 'lazy'}
-		decoding="async"
-		fetchpriority={eager ? 'high' : 'auto'}
-		onload={() => {
-			loaded = true;
-		}}
-	/>
+	{#if hasImageUrls}
+		<img
+			src={imageUrls.w960}
+			{srcset}
+			{sizes}
+			{alt}
+			loading={eager ? 'eager' : 'lazy'}
+			decoding="async"
+			fetchpriority={eager ? 'high' : 'auto'}
+			onload={() => {
+				loaded = true;
+			}}
+		/>
+	{/if}
 </div>
 
 <style>

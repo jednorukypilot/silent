@@ -10,6 +10,11 @@ export type DbWorkStill = {
 	alt: string | null;
 	fileKey: string;
 	sortOrder: number;
+	imageUrls: {
+		w480: string;
+		w960: string;
+		w1600: string;
+	};
 };
 
 export type DbWork = {
