@@ -87,7 +87,7 @@
 <div class="flex h-full w-full flex-row">
 	<div class="hidden w-1/3 items-center bg-white xl:flex">
 		<div
-			class="flex w-full flex-col justify-center bg-white px-8 py-2 2xl:w-2/3"
+			class="flex flex-col justify-center bg-pink-100 px-8 py-2"
 			bind:this={menu}
 			role="region"
 			on:mouseenter={handleMenuEnter}
@@ -111,8 +111,8 @@
 						goto(resolve(`/${tile.id}`));
 					}}
 				>
-					<span class="hidden text-sm opacity-25 2xl:inline">{weights[index].toFixed(2)}</span>
-					{tile.title}
+					<span class="hidden text-xs opacity-25 2xl:inline">{weights[index].toFixed(2)}</span>
+					<span class="overflow-x-visible text-nowrap">{tile.title}</span>
 				</button>
 			{/each}
 		</div>

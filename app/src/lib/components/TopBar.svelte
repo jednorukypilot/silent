@@ -29,7 +29,6 @@
 		<a
 			class="m-2 flex h-10 w-10 items-center justify-center border-2 border-white p-2 text-white"
 			href={resolve('/')}
-			onclick={(event) => handleNav(event, resolve('/'))}
 		>
 			kt
 		</a>

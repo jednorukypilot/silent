@@ -13,8 +13,13 @@
 
 	const HERO_TRAVEL = 1;
 	const SCROLL_SPEED = 0.0015;
+	const TOUCH_DRAG_SPEED = 0.0015;
 	const AUTO_DURATION = 700;
 	const AUTO_TRIGGER_THRESHOLD = 0.33;
+
+	let isTouchDragging = $state(false);
+	let lastTouchY = $state(0);
+	let suppressNextClick = $state(false);
 
 	function clamp(v: number, min: number, max: number) {
 		return Math.min(max, Math.max(min, v));
@@ -59,15 +64,8 @@
 		requestAnimationFrame(frame);
 	}
 
-	function handleWheel(e: WheelEvent) {
-		if (introDone || isAnimating) return;
-
-		e.preventDefault();
-
-		// only react to scrolling down
-		// if (e.deltaY <= 0) return;
-
-		progress = clamp(progress + e.deltaY * SCROLL_SPEED, 0, HERO_TRAVEL);
+	function applyProgressDelta(deltaY: number, speed: number) {
+		progress = clamp(progress + deltaY * speed, 0, HERO_TRAVEL);
 
 		if (progress >= AUTO_TRIGGER_THRESHOLD) {
 			animateToEnd();
@@ -77,6 +75,45 @@
 		if (progress >= HERO_TRAVEL) {
 			finishIntro();
 		}
+	}
+
+	function handleWheel(e: WheelEvent) {
+		if (introDone || isAnimating) return;
+
+		e.preventDefault();
+
+		// only react to scrolling down
+		// if (e.deltaY <= 0) return;
+
+		applyProgressDelta(e.deltaY, SCROLL_SPEED);
+	}
+
+	function handleTouchStart(e: TouchEvent) {
+		if (introDone || isAnimating || e.touches.length === 0) return;
+
+		isTouchDragging = true;
+		lastTouchY = e.touches[0].clientY;
+	}
+
+	function handleTouchMove(e: TouchEvent) {
+		if (!isTouchDragging || introDone || isAnimating || e.touches.length === 0) return;
+
+		e.preventDefault();
+
+		const currentY = e.touches[0].clientY;
+		const deltaY = lastTouchY - currentY;
+
+		if (Math.abs(deltaY) > 1) {
+			suppressNextClick = true;
+		}
+
+		lastTouchY = currentY;
+
+		applyProgressDelta(deltaY, TOUCH_DRAG_SPEED);
+	}
+
+	function handleTouchEnd() {
+		isTouchDragging = false;
 	}
 
 	onMount(() => {
@@ -92,9 +129,20 @@
 
 {#if !introDone}
 	<div
-		class="fixed inset-0 z-50 cursor-pointer bg-black will-change-transform"
+		class="fixed inset-0 z-50 cursor-pointer touch-none bg-black will-change-transform"
 		style={heroStyle}
-		onclick={animateToEnd}
+		onclick={() => {
+			if (suppressNextClick) {
+				suppressNextClick = false;
+				return;
+			}
+
+			animateToEnd();
+		}}
+		ontouchstart={handleTouchStart}
+		ontouchmove={handleTouchMove}
+		ontouchend={handleTouchEnd}
+		ontouchcancel={handleTouchEnd}
 		role="button"
 		tabindex="0"
 		onkeydown={(e) => {
