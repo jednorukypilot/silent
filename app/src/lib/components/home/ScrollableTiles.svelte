@@ -87,7 +87,7 @@
 <div class="flex h-full w-full flex-row">
 	<div class="hidden w-1/3 items-center bg-white xl:flex">
 		<div
-			class="flex flex-col justify-center bg-pink-100 px-8 py-2"
+			class="flex flex-col justify-center bg-white px-8 py-2"
 			bind:this={menu}
 			role="region"
 			on:mouseenter={handleMenuEnter}
