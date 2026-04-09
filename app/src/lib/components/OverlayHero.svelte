@@ -16,10 +16,14 @@
 	const TOUCH_DRAG_SPEED = 0.0015;
 	const AUTO_DURATION = 700;
 	const AUTO_TRIGGER_THRESHOLD = 0.33;
+	const SNAP_BACK_DURATION = 900;
+	const WHEEL_IDLE_MS = 140;
 
 	let isTouchDragging = $state(false);
 	let lastTouchY = $state(0);
 	let suppressNextClick = $state(false);
+	let snapBackFrameId: number | null = null;
+	let wheelIdleTimeoutId: number | null = null;
 
 	function clamp(v: number, min: number, max: number) {
 		return Math.min(max, Math.max(min, v));
@@ -38,8 +42,53 @@
 		onIntroDone();
 	}
 
+	function clearWheelIdleTimeout() {
+		if (wheelIdleTimeoutId !== null) {
+			window.clearTimeout(wheelIdleTimeoutId);
+			wheelIdleTimeoutId = null;
+		}
+	}
+
+	function cancelSnapBack() {
+		if (snapBackFrameId !== null) {
+			cancelAnimationFrame(snapBackFrameId);
+			snapBackFrameId = null;
+		}
+	}
+
+	function animateBackToStart() {
+		if (introDone || isAnimating || isTouchDragging) return;
+		if (progress <= 0 || progress >= AUTO_TRIGGER_THRESHOLD) return;
+
+		cancelSnapBack();
+
+		const startProgress = progress;
+		const startTime = performance.now();
+
+		function frame(now: number) {
+			const elapsed = now - startTime;
+			const t = clamp(elapsed / SNAP_BACK_DURATION, 0, 1);
+			const eased = easeOutCubic(t);
+
+			progress = startProgress * (1 - eased);
+
+			if (t < 1 && !introDone && !isAnimating && !isTouchDragging) {
+				snapBackFrameId = requestAnimationFrame(frame);
+				return;
+			}
+
+			progress = 0;
+			snapBackFrameId = null;
+		}
+
+		snapBackFrameId = requestAnimationFrame(frame);
+	}
+
 	function animateToEnd() {
 		if (introDone || isAnimating) return;
+
+		cancelSnapBack();
+		clearWheelIdleTimeout();
 
 		isAnimating = true;
 
@@ -81,16 +130,26 @@
 		if (introDone || isAnimating) return;
 
 		e.preventDefault();
+		cancelSnapBack();
+		clearWheelIdleTimeout();
 
 		// only react to scrolling down
 		// if (e.deltaY <= 0) return;
 
 		applyProgressDelta(e.deltaY, SCROLL_SPEED);
+
+		if (!introDone && !isAnimating) {
+			wheelIdleTimeoutId = window.setTimeout(() => {
+				wheelIdleTimeoutId = null;
+				animateBackToStart();
+			}, WHEEL_IDLE_MS);
+		}
 	}
 
 	function handleTouchStart(e: TouchEvent) {
 		if (introDone || isAnimating || e.touches.length === 0) return;
 
+		cancelSnapBack();
 		isTouchDragging = true;
 		lastTouchY = e.touches[0].clientY;
 	}
@@ -114,12 +173,15 @@
 
 	function handleTouchEnd() {
 		isTouchDragging = false;
+		animateBackToStart();
 	}
 
 	onMount(() => {
 		window.addEventListener('wheel', handleWheel, { passive: false });
 
 		return () => {
+			cancelSnapBack();
+			clearWheelIdleTimeout();
 			window.removeEventListener('wheel', handleWheel);
 		};
 	});

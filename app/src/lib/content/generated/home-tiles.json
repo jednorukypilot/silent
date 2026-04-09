@@ -145,54 +145,5 @@
         }
       }
     ]
-  },
-  {
-    "id": "5b9729a8-69d3-4ab1-b912-a77f7c375096",
-    "title": "SKWOR - Svět iluzí",
-    "description": "Wide",
-    "aspectRatio": 2.5074626865671643,
-    "year": 2024,
-    "videoLink": "https://vimeo.com/151308835",
-    "stills": [
-      {
-        "id": "3d1e7f17-e704-4bae-9e5e-5d542db81b47",
-        "createdAt": "2026-04-01T09:44:01.204269+00:00",
-        "workId": "5b9729a8-69d3-4ab1-b912-a77f7c375096",
-        "alt": "Dacia – image 1",
-        "fileKey": "a8b520ff-51f0-443a-9941-fa66e99f75db",
-        "sortOrder": 1,
-        "imageUrls": {
-          "w480": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w480/a8b520ff-51f0-443a-9941-fa66e99f75db.webp",
-          "w960": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w960/a8b520ff-51f0-443a-9941-fa66e99f75db.webp",
-          "w1600": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w1600/a8b520ff-51f0-443a-9941-fa66e99f75db.webp"
-        }
-      },
-      {
-        "id": "0aa61a5e-0b22-4470-a1f3-6b40cc4466ec",
-        "createdAt": "2026-04-01T09:44:02.746978+00:00",
-        "workId": "5b9729a8-69d3-4ab1-b912-a77f7c375096",
-        "alt": "Dacia – image 2",
-        "fileKey": "d6801cf9-a9be-49b1-a277-8087a7392cba",
-        "sortOrder": 2,
-        "imageUrls": {
-          "w480": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w480/d6801cf9-a9be-49b1-a277-8087a7392cba.webp",
-          "w960": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w960/d6801cf9-a9be-49b1-a277-8087a7392cba.webp",
-          "w1600": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w1600/d6801cf9-a9be-49b1-a277-8087a7392cba.webp"
-        }
-      },
-      {
-        "id": "9c0e4291-bfb2-46cf-a7d3-93c88c1588b8",
-        "createdAt": "2026-04-01T09:44:04.68059+00:00",
-        "workId": "5b9729a8-69d3-4ab1-b912-a77f7c375096",
-        "alt": "Dacia – image 3",
-        "fileKey": "eccc42b0-5679-43ad-bafb-ce663eea0b37",
-        "sortOrder": 3,
-        "imageUrls": {
-          "w480": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w480/eccc42b0-5679-43ad-bafb-ce663eea0b37.webp",
-          "w960": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w960/eccc42b0-5679-43ad-bafb-ce663eea0b37.webp",
-          "w1600": "https://hhllyviobsjcewkiltcz.supabase.co/storage/v1/object/public/stills/w1600/eccc42b0-5679-43ad-bafb-ce663eea0b37.webp"
-        }
-      }
-    ]
   }
 ]
