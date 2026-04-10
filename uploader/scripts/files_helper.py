@@ -27,6 +27,7 @@ def load_meta(work_dir: Path) -> dict:
     return {
         "name": meta["name"],
         "description": meta.get("description"),
+        "description_long": meta.get("description_long"),
         "year": meta.get("year"),
         "displayed": validate_displayed(meta.get("displayed")),
         "video_link": meta.get("video_link"),
@@ -56,6 +57,7 @@ def import_work_folder(work_dir: Path, client, bucket, dry_run=False, keep_origi
         client=client,
         name=meta["name"],
         description=meta["description"],
+        description_long=meta["description_long"],
         aspect_ratio=aspect_ratio,
         year=meta["year"],
         displayed=meta["displayed"],

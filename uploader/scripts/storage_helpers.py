@@ -51,6 +51,7 @@ def insert_work(
     client: Client,
     name: str,
     description: Optional[str],
+    description_long: Optional[str],
     aspect_ratio: float,
     year: Optional[int],
     displayed: Optional[int],
@@ -60,6 +61,7 @@ def insert_work(
     payload = {
         "name": name,
         "description": description,
+        "description_long": description_long,
         "aspect_ratio": aspect_ratio,
         "year": year,
         "displayed": displayed,

@@ -36,6 +36,7 @@ export type WorksData = {
 	id: string;
 	title: string;
 	description: string | null;
+	descriptionLong: string | null;
 	aspectRatio: number | null;
 	year: number | null;
 	videoLink: string | null;

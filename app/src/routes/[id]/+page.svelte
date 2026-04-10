@@ -63,7 +63,11 @@
 			<div
 				class="mt-6 mb-4 flex w-full flex-row items-start justify-between gap-10 overflow-hidden"
 			>
-				<p class=" text-lg text-black/80">{data.work.description}</p>
+				<div class="flex flex-col gap-4">
+					{#each (data.work.descriptionLong ?? '').split('\\n').filter(Boolean) as paragraph}
+						<p class="text-lg text-black/80">{paragraph}</p>
+					{/each}
+				</div>
 				{#if data.work.videoLink}
 					<a
 						href={data.work.videoLink}
