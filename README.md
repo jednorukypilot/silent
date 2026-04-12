@@ -88,3 +88,5 @@ For GitHub Pages builds, add these repository secrets so the build can resolve S
 - `SUPABASE_URL`
 - `PUBLIC_SUPABASE_URL`
 - `SUPABASE_PUBLISHABLE_KEY`
+
+build_trigger-001
