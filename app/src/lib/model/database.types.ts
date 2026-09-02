@@ -8,6 +8,7 @@ export type Database = {
 					id: string;
 					created_at: string;
 					displayed: number | null;
+					highlighted: number | null;
 					video_link: string | null;
 					name: string;
 					description: string | null;
@@ -18,6 +19,7 @@ export type Database = {
 					id?: string;
 					created_at?: string;
 					displayed?: number | null;
+					highlighted?: number | null;
 					video_link?: string | null;
 					name: string;
 					description?: string | null;
@@ -28,6 +30,7 @@ export type Database = {
 					id?: string;
 					created_at?: string;
 					displayed?: number | null;
+					highlighted?: number | null;
 					video_link?: string | null;
 					name?: string;
 					description?: string | null;

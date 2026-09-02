@@ -6,8 +6,21 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const appRoot = path.resolve(__dirname, '..');
 const envPath = path.join(appRoot, '.env');
-const outputPath = path.join(appRoot, 'src', 'lib', 'content', 'generated', 'home-tiles.json');
+const generatedDir = path.join(appRoot, 'src', 'lib', 'content', 'generated');
 const BUCKET = 'stills';
+
+const DATASETS = [
+	{
+		name: 'home tiles',
+		orderField: 'highlighted',
+		outputPath: path.join(generatedDir, 'home-tiles.json')
+	},
+	{
+		name: 'works list',
+		orderField: 'displayed',
+		outputPath: path.join(generatedDir, 'works-list.json')
+	}
+];
 
 function log(message, details) {
 	if (details === undefined) {
@@ -23,10 +36,11 @@ function fail(message, details) {
 	throw new Error(message);
 }
 
-const displayedWorksSelection = `
+const worksSelection = `
   id,
   created_at,
   displayed,
+  highlighted,
   name,
   description,
   description_long,
@@ -94,14 +108,14 @@ async function loadLocalEnv() {
 	}
 }
 
-async function readExistingTiles() {
+async function readExistingTiles(outputPath) {
 	const content = await fs.readFile(outputPath, 'utf8');
 	return JSON.parse(content);
 }
 
-function validateTiles(tiles) {
+function validateTiles(tiles, outputPath) {
 	if (!Array.isArray(tiles)) {
-		fail('Generated home tiles must be an array.');
+		fail(`Generated works data at ${outputPath} must be an array.`);
 	}
 
 	for (const [tileIndex, tile] of tiles.entries()) {
@@ -114,14 +128,15 @@ function validateTiles(tiles) {
 
 			if (!imageUrls?.w480 || !imageUrls?.w960 || !imageUrls?.w1600) {
 				fail(
-					`Still ${still?.id ?? stillIndex} in tile ${tile?.id ?? tileIndex} is missing imageUrls. Regenerate home tiles before building.`,
+					`Still ${still?.id ?? stillIndex} in tile ${tile?.id ?? tileIndex} is missing imageUrls. Regenerate works data before building.`,
 					{ tileId: tile?.id, stillId: still?.id, imageUrls }
 				);
 			}
 		}
 	}
 
-	log('Validated generated home tiles', {
+	log('Validated generated works data', {
+		output: path.relative(appRoot, outputPath),
 		tiles: tiles.length,
 		stills: tiles.reduce((count, tile) => count + tile.stills.length, 0)
 	});
@@ -160,13 +175,53 @@ function mapWork(work, baseUrl) {
 	};
 }
 
-async function writeTiles(tiles) {
-	validateTiles(tiles);
+async function writeTiles(tiles, outputPath) {
+	validateTiles(tiles, outputPath);
 	await fs.mkdir(path.dirname(outputPath), { recursive: true });
 	await fs.writeFile(outputPath, `${JSON.stringify(tiles, null, 2)}\n`, 'utf8');
 	log(`Generated ${tiles.length} works data entries`, {
 		output: path.relative(appRoot, outputPath)
 	});
+}
+
+async function writeFallback(outputPath) {
+	try {
+		const existingTiles = await readExistingTiles(outputPath);
+		validateTiles(existingTiles, outputPath);
+		log('Using existing generated works data because env is incomplete', {
+			output: path.relative(appRoot, outputPath)
+		});
+	} catch {
+		log('No valid generated works data found; writing empty fallback dataset', {
+			output: path.relative(appRoot, outputPath)
+		});
+		await writeTiles([], outputPath);
+	}
+}
+
+async function fetchDataset(supabaseClient, dataset, publicBaseUrl) {
+	log(`Fetching ${dataset.name} from Supabase`, { orderField: dataset.orderField });
+
+	const { data, error } = await supabaseClient
+		.from('works')
+		.select(worksSelection)
+		.not(dataset.orderField, 'is', null)
+		.order(dataset.orderField, { ascending: true })
+		.order('sort_order', { foreignTable: 'works_stills', ascending: true });
+
+	if (error) {
+		throw error;
+	}
+
+	log(`Fetched ${dataset.name} from Supabase`, {
+		works: data?.length ?? 0,
+		stills: (data ?? []).reduce((count, work) => count + (work.works_stills?.length ?? 0), 0)
+	});
+
+	await writeTiles(
+		(data ?? []).map((work) => mapWork(work, publicBaseUrl)),
+		dataset.outputPath
+	);
 }
 
 async function main() {
@@ -185,18 +240,10 @@ async function main() {
 			'[generate-works-data] Missing Supabase env vars. Reusing existing generated works data if present.'
 		);
 
-		try {
-			const existingTiles = await readExistingTiles();
-			validateTiles(existingTiles);
-			log('Using existing generated works data because env is incomplete', {
-				output: path.relative(appRoot, outputPath)
-			});
-			return;
-		} catch {
-			log('No valid generated works data found; writing empty fallback dataset');
-			await writeTiles([]);
-			return;
+		for (const dataset of DATASETS) {
+			await writeFallback(dataset.outputPath);
 		}
+		return;
 	}
 
 	const publicBaseUrl = (PUBLIC_SUPABASE_URL ?? SUPABASE_URL).replace(/\/$/, '');
@@ -205,11 +252,6 @@ async function main() {
 		fail('Could not determine PUBLIC_SUPABASE_URL for generated image URLs.');
 	}
 
-	log('Fetching home tiles from Supabase', {
-		supabaseUrl: SUPABASE_URL,
-		publicBaseUrl
-	});
-
 	const supabaseClient = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 		auth: {
 			persistSession: false,
@@ -217,23 +259,9 @@ async function main() {
 		}
 	});
 
-	const { data, error } = await supabaseClient
-		.from('works')
-		.select(displayedWorksSelection)
-		.not('displayed', 'is', null)
-		.order('displayed', { ascending: true })
-		.order('sort_order', { foreignTable: 'works_stills', ascending: true });
-
-	if (error) {
-		throw error;
+	for (const dataset of DATASETS) {
+		await fetchDataset(supabaseClient, dataset, publicBaseUrl);
 	}
-
-	log('Fetched works from Supabase', {
-		works: data?.length ?? 0,
-		stills: (data ?? []).reduce((count, work) => count + (work.works_stills?.length ?? 0), 0)
-	});
-
-	await writeTiles((data ?? []).map((work) => mapWork(work, publicBaseUrl)));
 }
 
 main().catch((error) => {

@@ -3,8 +3,12 @@ import type { MenuTile } from './types';
 
 export const MENU_TILES: MenuTile[] = [
 	{
-		title: 'Works',
+		title: 'Home',
 		href: resolve('/')
+	},
+	{
+		title: 'Works',
+		href: resolve('/works')
 	},
 	{
 		title: 'Contact',

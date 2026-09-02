@@ -21,6 +21,7 @@ export type DbWork = {
 	id: string;
 	createdAt: string;
 	displayed: number | null;
+	highlighted: number | null;
 	videoLink: string | null;
 	name: string;
 	description: string | null;
