@@ -14,13 +14,13 @@
 			<img src={asset('/images/logos/logo-inverz.svg')} alt="logo" class="flex h-12" />
 		</div>
 		<div class="flex h-full flex-col items-start">
-			<h3 class="text-secondary mb-4 font-serif text-xl font-bold">{$t('footer.navigation')}</h3>
+			<h3 class="text-secondary mb-4 font-serif text-xl font-medium">{$t('footer.navigation')}</h3>
 			<a href={route('/catalog')} class="mb-2 underline">{$t('footer.offers')}</a>
 			<a href={route('/#faq')} class="mb-2 underline">{$t('footer.faq')}</a>
 			<a href={route('/important-links')} class="mb-2 underline">{$t('footer.important_links')}</a>
 		</div>
 		<div class="flex h-full flex-col items-start">
-			<h3 class="text-primary mb-4 font-serif text-xl font-bold">{$t('footer.contact')}</h3>
+			<h3 class="text-primary mb-4 font-serif text-xl font-medium">{$t('footer.contact')}</h3>
 			<div class="flex flex-row items-center justify-center p-2">
 				<FontAwesomeIcon icon={faPhone} class="h-6 text-white" />
 				<a href="tel:+420123456789" class="ml-2 underline"> {$t('phone')} </a>

@@ -12,6 +12,6 @@
 	}`;
 </script>
 
-<a {href} class={`border-2 px-6 py-3 font-semibold ${buttonClasses}`}>
+<a {href} class={`border-2 px-6 py-3 font-normal ${buttonClasses}`}>
 	{label}
 </a>

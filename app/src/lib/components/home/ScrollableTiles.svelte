@@ -96,9 +96,9 @@
 			{#each tileData as tile, index (tile.id)}
 				<button
 					type="button"
-					class="mt-4 text-left text-xl transition-all hover:cursor-pointer"
+					class="text-md mt-3 text-left transition-all hover:cursor-pointer"
 					style="
-						font-weight: {Math.round(200 + weights[index] * 300)};
+						font-weight: {Math.max(100, Math.round(weights[index] * 300))};
 						opacity: {0.35 + weights[index] * 2.5};
 					"
 					on:focus={() => {
@@ -111,7 +111,6 @@
 						goto(resolve(`/${tile.id}`));
 					}}
 				>
-					<span class="hidden text-xs opacity-25 2xl:inline">{weights[index].toFixed(2)}</span>
 					<span class="overflow-x-visible text-nowrap">{tile.title}</span>
 				</button>
 			{/each}

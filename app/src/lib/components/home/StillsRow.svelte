@@ -21,9 +21,9 @@
 </script>
 
 <article class="group w-full bg-white">
-	<div class="flex h-full w-full flex-col gap-3 overflow-hidden pb-5">
+	<div class="flex h-full w-full flex-col gap-0 overflow-hidden pb-5">
 		<button
-			class="grid h-full w-full grid-cols-3 overflow-hidden hover:cursor-pointer"
+			class="grid h-full w-full grid-cols-3 gap-px overflow-hidden bg-white hover:cursor-pointer"
 			style={`aspect-ratio: ${rowAspectRatio};`}
 			on:click={() => goto(resolve(`/${tile.id}`))}
 		>
@@ -45,7 +45,7 @@
 			{/each}
 		</button>
 		<div class="flex items-baseline gap-10 overflow-hidden">
-			<h2 class="text-xl font-semibold text-black">{tile.title}</h2>
+			<h2 class="text-xl text-black">{tile.title}</h2>
 			{#if hoverDetails}
 				<p
 					class="text-md max-w-0 overflow-hidden whitespace-nowrap text-neutral-600 opacity-0 transition-all duration-300 ease-out group-hover:max-w-full group-hover:opacity-100"
