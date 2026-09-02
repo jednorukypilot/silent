@@ -34,6 +34,5 @@ __pycache__/
 venv/
 env/
 
-works/
 uploader/works/
 uploader/.venv/
