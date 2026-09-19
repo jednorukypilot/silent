@@ -5,8 +5,6 @@
 
 	let mobileMenuOpen = $state(false);
 
-	const menuStyle = $derived(`max-width: min(${MENU_TILES.length * 16}rem, 1200px);`);
-
 	function handleNav(event: MouseEvent, href: string) {
 		event.preventDefault();
 		mobileMenuOpen = false;
@@ -25,25 +23,30 @@
 </script>
 
 <div class="fixed top-0 right-0 left-0 z-40 flex h-16 w-full justify-center bg-black">
-	<div class="flex h-full w-full items-center justify-between">
+	<div class="flex h-full w-full items-center">
 		<a
 			class="m-2 flex h-10 w-10 items-center justify-center border-2 border-white p-2 text-white"
 			href={resolve('/')}
 		>
 			kt
 		</a>
-		<div
-			class="container hidden h-full items-center justify-evenly gap-6 px-4 text-white md:flex"
-			style={menuStyle}
-		>
-			{#each MENU_TILES as tile}
+		<div class="mr-4 ml-auto hidden items-center gap-2 text-white md:flex">
+			{#each MENU_TILES as tile, i}
+				{#if i > 0}
+					<svg
+						class="mx-1 h-8 w-5 text-white/90"
+						viewBox="0 0 12 20"
+						fill="none"
+						aria-hidden="true"
+					>
+						<path d="M9 3L3 17" stroke="currentColor" stroke-width="1.5" />
+					</svg>
+				{/if}
 				<a href={tile.href} class="text-sm" onclick={(event) => handleNav(event, tile.href)}
 					>{tile.title}</a
 				>
 			{/each}
 		</div>
-
-		<div class="hidden w-10 md:block"></div>
 
 		<button
 			type="button"
