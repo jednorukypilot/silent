@@ -20,8 +20,8 @@
 		.join(' / ');
 </script>
 
-<article class="group w-full bg-white">
-	<div class="flex h-full w-full flex-col gap-0 overflow-hidden pb-5">
+<article class="group w-full bg-transparent">
+	<div class="flex h-full w-full flex-col overflow-hidden">
 		<button
 			class="grid h-full w-full grid-cols-3 gap-px overflow-hidden bg-white hover:cursor-pointer"
 			style={`aspect-ratio: ${rowAspectRatio};`}
@@ -44,8 +44,8 @@
 				</div>
 			{/each}
 		</button>
-		<div class="flex items-baseline gap-10 overflow-hidden">
-			<h2 class="text-xl text-black">{tile.title}</h2>
+		<div class="flex items-baseline gap-8 overflow-hidden">
+			<h2 class="text-lg text-black">{tile.title}</h2>
 			{#if hoverDetails}
 				<p
 					class="text-md max-w-0 overflow-hidden whitespace-nowrap text-neutral-600 opacity-0 transition-all duration-300 ease-out group-hover:max-w-full group-hover:opacity-100"
