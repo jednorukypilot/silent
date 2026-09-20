@@ -6,18 +6,20 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 
-	export let tileData: WorksData[] = [];
+	let { tileData = [] }: { tileData: WorksData[] } = $props();
 
 	let scroller: HTMLDivElement | null = null;
 	let menu: HTMLDivElement | null = null;
-	let sections: (HTMLElement | null)[] = [];
-	let weights: number[] = [];
+	let sections: (HTMLElement | null)[] = $state([]);
+	let weights: number[] = $state([]);
 
 	const bandInViewHeights = 1.6;
 	const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 
-	$: sections = Array(tileData.length).fill(null);
-	$: weights = Array(tileData.length).fill(0);
+	$effect.pre(() => {
+		sections = Array(tileData.length).fill(null);
+		weights = Array(tileData.length).fill(0);
+	});
 
 	function recomputeWeights() {
 		if (!browser || !scroller) return;
@@ -90,8 +92,8 @@
 			class="flex flex-col justify-center bg-transparent px-8 py-2"
 			bind:this={menu}
 			role="region"
-			on:mouseenter={handleMenuEnter}
-			on:mousemove={handleMenuMouseMove}
+			onmouseenter={handleMenuEnter}
+			onmousemove={handleMenuMouseMove}
 		>
 			{#each tileData as tile, index (tile.id)}
 				<button
@@ -101,10 +103,10 @@
 						font-weight: {Math.max(100, Math.round(weights[index] * 300))};
 						opacity: {0.35 + weights[index] * 2.5};
 					"
-					on:focus={() => {
+					onfocus={() => {
 						sections[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 					}}
-					on:click={() => {
+					onclick={() => {
 						// navigate to the tiles page
 						sections[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 						menu?.blur();
@@ -119,15 +121,15 @@
 
 	<div
 		bind:this={scroller}
-		on:scroll={onScroll}
+		onscroll={onScroll}
 		class="flex w-full flex-col gap-2 overflow-y-scroll py-6"
 	>
 		{#each tileData as tile, index (tile.id)}
 			<div
 				bind:this={sections[index]}
 				role="region"
-				on:mouseenter={() => (weights[index] = 1.3)}
-				on:mouseleave={() => recomputeWeights()}
+				onmouseenter={() => (weights[index] = 1.3)}
+				onmouseleave={() => recomputeWeights()}
 			>
 				<StillsRow {tile} />
 			</div>

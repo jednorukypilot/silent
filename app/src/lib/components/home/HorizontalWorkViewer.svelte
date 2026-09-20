@@ -5,18 +5,18 @@
 	import type { WorksData } from '$lib/model/types';
 	import { onMount } from 'svelte';
 
-	export let tileData: WorksData[] = [];
+	let { tileData = [] }: { tileData: WorksData[] } = $props();
 
 	const fallbackAspectRatio = 16 / 9;
 
 	let viewport: HTMLDivElement | null = null;
-	let activeIndex = 0;
+	let activeIndex = $state(0);
 
 	// Native touch panning already gives mobile the swipe gesture; mouse users get no
 	// equivalent (dragging with a mouse doesn't scroll a container by default), so drag
 	// support here is implemented manually and only engaged for mouse pointers.
 	let isPointerDown = false;
-	let isDragging = false;
+	let isDragging = $state(false);
 	let dragMoved = false;
 	let dragPointerId = -1;
 	let dragStartX = 0;
@@ -86,11 +86,11 @@
 		class="no-scrollbar flex min-h-0 flex-1 cursor-grab snap-x overflow-x-auto overflow-y-hidden select-none"
 		class:cursor-grabbing={isDragging}
 		class:snap-mandatory={!isDragging}
-		on:scroll={setActiveSlideFromScroll}
-		on:pointerdown={handlePointerDown}
-		on:pointermove={handlePointerMove}
-		on:pointerup={endDrag}
-		on:pointercancel={endDrag}
+		onscroll={setActiveSlideFromScroll}
+		onpointerdown={handlePointerDown}
+		onpointermove={handlePointerMove}
+		onpointerup={endDrag}
+		onpointercancel={endDrag}
 	>
 		{#each tileData as tile, index (tile.id)}
 			<article
@@ -100,7 +100,7 @@
 					type="button"
 					class="h-auto w-full shrink-0 overflow-hidden bg-neutral-900 text-left hover:cursor-pointer"
 					style={`aspect-ratio: ${tile.aspectRatio ?? fallbackAspectRatio};`}
-					on:click={() => {
+					onclick={() => {
 						if (dragMoved) return;
 						goto(resolve(`/${tile.id}`));
 					}}
@@ -125,7 +125,7 @@
 					<a
 						class="flex w-full flex-row items-start justify-between gap-10 overflow-hidden"
 						href={resolve(`/${tile.id}`)}
-						on:click={(event) => {
+						onclick={(event) => {
 							if (dragMoved) event.preventDefault();
 						}}
 					>
@@ -145,7 +145,7 @@
 		{#each tileData as tile, index (tile.id)}
 			<button
 				type="button"
-				on:click={() => scrollToSlide(index)}
+				onclick={() => scrollToSlide(index)}
 				class="flex h-5 w-3 items-center justify-center"
 				aria-label={`Go to ${tile.title}`}
 			>

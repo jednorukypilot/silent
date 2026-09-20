@@ -4,20 +4,21 @@
 	import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
 	import type { WorksData } from '$lib/model/types';
 
-	export let tile: WorksData;
+	let { tile }: { tile: WorksData } = $props();
 
 	const fallbackAspectRatio = 16 / 9;
 	const visibleStillCount = 3;
 
-	$: stillAspectRatio = tile.aspectRatio ?? fallbackAspectRatio;
-	$: rowAspectRatio = stillAspectRatio * visibleStillCount;
-	$: displayedStills = Array.from(
-		{ length: visibleStillCount },
-		(_, index) => tile.stills[index] ?? null
+	const stillAspectRatio = $derived(tile.aspectRatio ?? fallbackAspectRatio);
+	const rowAspectRatio = $derived(stillAspectRatio * visibleStillCount);
+	const displayedStills = $derived(
+		Array.from({ length: visibleStillCount }, (_, index) => tile.stills[index] ?? null)
 	);
-	$: hoverDetails = [tile.year ? String(tile.year) : null, tile.description]
-		.filter((value): value is string => Boolean(value))
-		.join(' / ');
+	const hoverDetails = $derived(
+		[tile.year ? String(tile.year) : null, tile.description]
+			.filter((value): value is string => Boolean(value))
+			.join(' / ')
+	);
 </script>
 
 <article class="group w-full bg-transparent">
@@ -25,7 +26,7 @@
 		<button
 			class="grid h-full w-full grid-cols-3 gap-px overflow-hidden bg-white hover:cursor-pointer"
 			style={`aspect-ratio: ${rowAspectRatio};`}
-			on:click={() => goto(resolve(`/${tile.id}`))}
+			onclick={() => goto(resolve(`/${tile.id}`))}
 		>
 			{#each displayedStills as still, index}
 				<div class="h-full bg-neutral-800">
