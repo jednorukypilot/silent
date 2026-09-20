@@ -36,11 +36,10 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
-		"@supabase/supabase-js": "^2.101.0",
 		"@fontsource-variable/figtree": "^5.2.6",
 		"@fortawesome/fontawesome-svg-core": "^7.1.0",
 		"@fortawesome/free-solid-svg-icons": "^7.1.0",
 		"@fortawesome/svelte-fontawesome": "^0.2.4",
-		"svelte-i18n": "^4.0.1"
+		"@supabase/supabase-js": "^2.101.0"
 	}
 }
