@@ -12,6 +12,17 @@
 	let viewport: HTMLDivElement | null = null;
 	let activeIndex = 0;
 
+	// Native touch panning already gives mobile the swipe gesture; mouse users get no
+	// equivalent (dragging with a mouse doesn't scroll a container by default), so drag
+	// support here is implemented manually and only engaged for mouse pointers.
+	let isPointerDown = false;
+	let isDragging = false;
+	let dragMoved = false;
+	let dragPointerId = -1;
+	let dragStartX = 0;
+	let dragStartScrollLeft = 0;
+	const dragThreshold = 4;
+
 	function clampIndex(index: number) {
 		if (tileData.length === 0) return 0;
 		return Math.max(0, Math.min(tileData.length - 1, index));
@@ -31,6 +42,39 @@
 		viewport.scrollTo({ left: clamped * viewport.clientWidth, behavior: 'smooth' });
 	}
 
+	function handlePointerDown(event: PointerEvent) {
+		if (!viewport || event.pointerType !== 'mouse' || event.button !== 0) return;
+		isPointerDown = true;
+		dragMoved = false;
+		dragPointerId = event.pointerId;
+		dragStartX = event.clientX;
+		dragStartScrollLeft = viewport.scrollLeft;
+	}
+
+	function handlePointerMove(event: PointerEvent) {
+		if (!isPointerDown || !viewport) return;
+		const delta = event.clientX - dragStartX;
+
+		if (!isDragging) {
+			if (Math.abs(delta) <= dragThreshold) return;
+			isDragging = true;
+			dragMoved = true;
+			viewport.setPointerCapture(dragPointerId);
+		}
+
+		viewport.scrollLeft = dragStartScrollLeft - delta;
+		setActiveSlideFromScroll();
+	}
+
+	function endDrag() {
+		isPointerDown = false;
+		if (isDragging) {
+			viewport?.releasePointerCapture(dragPointerId);
+			scrollToSlide(activeIndex);
+		}
+		isDragging = false;
+	}
+
 	onMount(() => {
 		setActiveSlideFromScroll();
 	});
@@ -39,8 +83,14 @@
 <section class="flex h-full w-full flex-col bg-white text-black">
 	<div
 		bind:this={viewport}
-		class="no-scrollbar flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overflow-y-hidden"
+		class="no-scrollbar flex min-h-0 flex-1 cursor-grab snap-x overflow-x-auto overflow-y-hidden select-none"
+		class:cursor-grabbing={isDragging}
+		class:snap-mandatory={!isDragging}
 		on:scroll={setActiveSlideFromScroll}
+		on:pointerdown={handlePointerDown}
+		on:pointermove={handlePointerMove}
+		on:pointerup={endDrag}
+		on:pointercancel={endDrag}
 	>
 		{#each tileData as tile, index (tile.id)}
 			<article
@@ -50,7 +100,10 @@
 					type="button"
 					class="h-auto w-full shrink-0 overflow-hidden bg-neutral-900 text-left hover:cursor-pointer"
 					style={`aspect-ratio: ${tile.aspectRatio ?? fallbackAspectRatio};`}
-					on:click={() => goto(resolve(`/${tile.id}`))}
+					on:click={() => {
+						if (dragMoved) return;
+						goto(resolve(`/${tile.id}`));
+					}}
 					aria-label={`Open ${tile.title}`}
 				>
 					{#if tile.stills[0]}
@@ -72,6 +125,9 @@
 					<a
 						class="flex w-full flex-row items-start justify-between gap-10 overflow-hidden"
 						href={resolve(`/${tile.id}`)}
+						on:click={(event) => {
+							if (dragMoved) event.preventDefault();
+						}}
 					>
 						<h1 class="text-4xl">{tile.title}</h1>
 						<span class=" text-3xl text-black"> {'>'} </span>
@@ -85,16 +141,28 @@
 		{/each}
 	</div>
 
-	<div class="flex w-full items-center justify-center gap-2 px-6 py-5">
+	<div class="flex w-full items-center justify-center gap-1.5 px-6 py-5">
 		{#each tileData as tile, index (tile.id)}
 			<button
 				type="button"
 				on:click={() => scrollToSlide(index)}
-				class="h-2.5 w-2.5 rounded-full border border-black/40 transition-all"
-				class:bg-black={index === activeIndex}
-				class:bg-transparent={index !== activeIndex}
+				class="flex h-5 w-3 items-center justify-center"
 				aria-label={`Go to ${tile.title}`}
-			></button>
+			>
+				<svg
+					class={`h-full w-full transition-colors ${index === activeIndex ? 'text-black' : 'text-black/30'}`}
+					viewBox="0 0 12 20"
+					fill="none"
+					aria-hidden="true"
+				>
+					<path
+						d="M9 3L3 17"
+						stroke="currentColor"
+						stroke-width={index === activeIndex ? '2.5' : '1.5'}
+						class="transition-all"
+					/>
+				</svg>
+			</button>
 		{/each}
 	</div>
 </section>
@@ -106,5 +174,10 @@
 
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;
+	}
+
+	.no-scrollbar :global(img) {
+		-webkit-user-drag: none;
+		user-select: none;
 	}
 </style>
