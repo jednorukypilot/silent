@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 542 541"
+     width="542" height="541">
+  <g fill="#000000">
+    <!-- Main connected shape -->
+    <path d="M 489 95
+             L 96 271
+             L 92 49
+             L 57 59
+             L 56 516
+             L 95 522
+             L 96 310
+             L 174 520
+             L 216 521
+             L 128 296
+             L 488 134
+             Z"/>
+
+    <!-- Upper diagonal bar -->
+    <path d="M 476 42
+             L 151 188
+             L 150 223
+             L 486 75
+             Z"/>
+
+    <!-- Right vertical bar -->
+    <path d="M 352 220
+             L 321 234
+             L 324 520
+             L 360 510
+             Z"/>
+  </g>
+</svg>

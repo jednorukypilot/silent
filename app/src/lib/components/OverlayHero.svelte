@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { asset } from '$app/paths';
 
 	type Props = {
 		onIntroDone?: () => void;
@@ -215,7 +216,9 @@
 		}}
 	>
 		<div class="flex h-[calc(100vh-4rem)] items-center justify-center">
-			<div class="flex h-56 w-56 items-center justify-center bg-white text-7xl text-black">kt</div>
+			<div class="flex h-56 w-56 items-center justify-center bg-white">
+				<img src={asset('/logo.svg')} alt="Logo" class="h-24 w-24 object-contain" />
+			</div>
 		</div>
 	</div>
 {/if}

@@ -73,7 +73,7 @@
 						href={data.work.videoLink}
 						target="_blank"
 						rel="noreferrer"
-						class="text-lg text-black/80 underline"
+						class="text-end text-lg text-black/80 underline"
 					>
 						Watch on Vimeo
 					</a>

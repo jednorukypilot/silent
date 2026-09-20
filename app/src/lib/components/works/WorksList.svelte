@@ -5,10 +5,24 @@
 	export let works: WorksData[] = [];
 </script>
 
-<div class="flex h-full w-full flex-col overflow-y-auto bg-white px-6 py-8 text-black">
+<div class="flex h-full w-full flex-col overflow-y-auto bg-white px-6 py-8">
 	{#each works as work (work.id)}
-		<a href={resolve(`/${work.id}`)} class="text-md py-2 transition-opacity hover:opacity-60">
+		<a
+			href={resolve(`/${work.id}`)}
+			class="text-md mt-2.5 block text-left transition-all"
+		>
 			{work.title}
 		</a>
 	{/each}
 </div>
+
+<style>
+	a {
+		font-weight: 100;
+	}
+
+	a:hover,
+	a:focus {
+		font-weight: 390;
+	}
+</style>

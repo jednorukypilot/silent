@@ -87,7 +87,7 @@
 <div class="flex h-full w-full flex-row">
 	<div class="hidden w-1/3 items-center bg-white xl:flex">
 		<div
-			class="flex flex-col justify-center bg-white px-8 py-2"
+			class="flex flex-col justify-center bg-transparent px-8 py-2"
 			bind:this={menu}
 			role="region"
 			on:mouseenter={handleMenuEnter}
@@ -96,7 +96,7 @@
 			{#each tileData as tile, index (tile.id)}
 				<button
 					type="button"
-					class="text-md mt-3 text-left transition-all hover:cursor-pointer"
+					class="text-md mt-2.5 text-left transition-all hover:cursor-pointer"
 					style="
 						font-weight: {Math.max(100, Math.round(weights[index] * 300))};
 						opacity: {0.35 + weights[index] * 2.5};
@@ -120,7 +120,7 @@
 	<div
 		bind:this={scroller}
 		on:scroll={onScroll}
-		class="flex w-full flex-col gap-4 overflow-y-scroll py-8"
+		class="flex w-full flex-col gap-2 overflow-y-scroll py-6"
 	>
 		{#each tileData as tile, index (tile.id)}
 			<div
