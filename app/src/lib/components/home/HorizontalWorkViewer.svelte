@@ -133,7 +133,7 @@
 						<span class=" text-3xl text-black"> {'>'} </span>
 					</a>
 					<p class="text-lg text-black/80">{tile.year}</p>
-					<div class="w-fulloverflow-hidden mt-6 mb-4 flex">
+					<div class="mt-6 mb-4 flex w-full overflow-hidden">
 						<p class=" text-lg text-black/80">{tile.description}</p>
 					</div>
 				</div>

@@ -3,9 +3,7 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		interface Locals {
-			lang: import('$lib/i18n').Lang;
-		}
+		// interface Locals {}
 		// interface PageData {}
 		interface PageState {
 			skipHero?: boolean;
