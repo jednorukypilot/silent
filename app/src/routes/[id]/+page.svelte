@@ -3,43 +3,72 @@
 
 	let { data }: { data: PageData } = $props();
 
-	function getVimeoEmbedUrl(videoLink: string | null) {
+	function getVimeoEmbedUrl(url: URL) {
+		const pathSegments = url.pathname.split('/').filter(Boolean);
+		const videoId = [...pathSegments].reverse().find((segment) => /^\d+$/.test(segment));
+
+		if (!videoId) return null;
+
+		const embedUrl = new URL(`https://player.vimeo.com/video/${videoId}`);
+		const hash = url.searchParams.get('h');
+
+		if (hash) {
+			embedUrl.searchParams.set('h', hash);
+		}
+
+		embedUrl.searchParams.set('title', '0');
+		embedUrl.searchParams.set('byline', '0');
+		embedUrl.searchParams.set('portrait', '0');
+
+		return embedUrl.toString();
+	}
+
+	function getYouTubeEmbedUrl(url: URL) {
+		let videoId: string | null = null;
+
+		if (url.hostname.includes('youtu.be')) {
+			videoId = url.pathname.split('/').filter(Boolean)[0] ?? null;
+		} else if (url.pathname.startsWith('/embed/')) {
+			videoId = url.pathname.split('/').filter(Boolean)[1] ?? null;
+		} else {
+			videoId = url.searchParams.get('v');
+		}
+
+		if (!videoId) return null;
+
+		return `https://www.youtube-nocookie.com/embed/${videoId}`;
+	}
+
+	function getEmbedUrl(videoLink: string | null) {
 		if (!videoLink) return null;
 
 		try {
 			const url = new URL(videoLink);
-			const pathSegments = url.pathname.split('/').filter(Boolean);
-			const videoId = [...pathSegments].reverse().find((segment) => /^\d+$/.test(segment));
 
-			if (!videoId) return null;
-
-			const embedUrl = new URL(`https://player.vimeo.com/video/${videoId}`);
-			const hash = url.searchParams.get('h');
-
-			if (hash) {
-				embedUrl.searchParams.set('h', hash);
+			if (url.hostname.includes('vimeo.com')) {
+				return getVimeoEmbedUrl(url);
 			}
 
-			embedUrl.searchParams.set('title', '0');
-			embedUrl.searchParams.set('byline', '0');
-			embedUrl.searchParams.set('portrait', '0');
+			if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+				return getYouTubeEmbedUrl(url);
+			}
 
-			return embedUrl.toString();
+			return null;
 		} catch {
 			return null;
 		}
 	}
 
-	const vimeoEmbedUrl = getVimeoEmbedUrl(data.work.videoLink);
+	const embedUrl = getEmbedUrl(data.work.videoLink);
 </script>
 
 <div class="absolute top-16 right-0 bottom-0 left-0 overflow-y-auto">
 	<div class="flex flex-col bg-black text-white">
 		<div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-black text-white">
-			{#if vimeoEmbedUrl}
+			{#if embedUrl}
 				<iframe
-					title={`${data.work.title} Vimeo player`}
-					src={vimeoEmbedUrl}
+					title={`${data.work.title} video player`}
+					src={embedUrl}
 					class="h-full min-h-[calc(100dvh-4rem)] w-full"
 					allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
 					allowfullscreen
@@ -75,7 +104,7 @@
 						rel="noreferrer"
 						class="text-end text-lg text-black/80 underline"
 					>
-						Watch on Vimeo
+						{data.work.videoLink.includes('youtu') ? 'Watch on YouTube' : 'Watch on Vimeo'}
 					</a>
 				{/if}
 			</div>

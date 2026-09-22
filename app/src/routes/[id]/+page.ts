@@ -1,9 +1,9 @@
 import { error } from '@sveltejs/kit';
-import tiles from '$lib/content/generated/home-tiles.json';
+import worksList from '$lib/content/generated/works-list.json';
 import type { WorksData } from '$lib/model/types';
 import type { EntryGenerator, PageLoad } from './$types';
 
-const works = tiles as WorksData[];
+const works = worksList as WorksData[];
 
 export const entries: EntryGenerator = () => works.map(({ id }) => ({ id }));
 
