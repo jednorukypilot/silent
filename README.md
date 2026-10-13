@@ -89,7 +89,7 @@ page and shows it while the full image loads. A work's stills must all share one
 ratio (`--allow-ratio-mismatch` downgrades that to a warning).
 
 Each folder needs a `meta.json`; see
-[uploader/meta.example.json](uploader/meta.example.json). `stills` is
+[uploader/meta.example.jsonc](uploader/meta.example.jsonc). `stills` is
 optional and keyed by filename — list only the images that need custom alt text or
 a backdrop placement. A folder whose `meta.json` has no `name` creates no work:
 its images are registered as hero/contact backdrops only.

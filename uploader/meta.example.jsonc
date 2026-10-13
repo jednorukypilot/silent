@@ -1,0 +1,64 @@
+// meta.json format — one per folder under uploader/works/.
+//
+// This annotated copy is .jsonc. The real meta.json is plain JSON: no comments,
+// no trailing commas, double quotes only.
+//
+// A work folder holds 3 images (any other count warns) plus meta.json. Images
+// are read in filename order and must all share one aspect ratio, because a
+// work renders as a single-ratio 3-cell grid — pass --allow-ratio-mismatch to
+// downgrade that to a warning.
+{
+  // Title shown on the site, and the field that decides whether a work exists
+  // at all: drop "name" and the folder turns backdrop-only — its images are
+  // uploaded and placed as hero/contact backdrops, no work is created, and
+  // none of the fields below (except "stills") may be set.
+  "name": "Dacia",
+
+  // Short credit line under the title.
+  "description": "Kryštof Tichý / Ondřej Burda",
+
+  // Longer credits on the work itself. "\n" becomes a line break.
+  "description_long": "FX6 / Petzval TLS rehoused / Laowa Pro2be lens",
+
+  // Year of the work.
+  "year": 2024,
+
+  // Vimeo or YouTube URL behind the play action.
+  "video_link": "https://vimeo.com/1182560731",
+
+  // Position in the /works list. null or missing = not listed there.
+  "displayed": 3,
+
+  // Position on the home page. null or missing = not shown there.
+  //
+  // Both are plain sort numbers, lowest first. They need not be unique or
+  // contiguous (works that tie are ordered by name), and they are independent
+  // of each other: a work can be listed on /works but kept off the home page.
+  "highlighted": 1,
+
+  // Optional, keyed by exact filename. List only the images that need custom
+  // alt text or a backdrop placement; naming a file the folder does not
+  // contain is an error. Images left out still upload as part of the work.
+  "stills": {
+    "Dacia_still1.jpg": {
+      // Alt text. Defaults to "<name> – image <n>", n being the image's
+      // position in filename order.
+      "alt": "Wide shot of the car on a frozen lake",
+
+      // Extra surfaces this image also backs: "hero" (home banner) and/or
+      // "contact". Omit it for a still that only belongs to the work.
+      "placements": ["hero"]
+    },
+
+    // Only alt text: this still appears in the work, nowhere else.
+    "Dacia_still2.jpg": {
+      "alt": "Close-up of the dashboard at dusk"
+    },
+
+    // Only placements, so alt text falls back to "Dacia – image 2":
+    // filename order is plain text order, and still13 sorts before still2.
+    "Dacia_still13.jpg": {
+      "placements": ["hero", "contact"]
+    }
+  }
+}

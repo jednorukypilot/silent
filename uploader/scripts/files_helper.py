@@ -61,7 +61,7 @@ def load_meta(work_dir: Path, image_names: set[str]) -> dict:
     except json.JSONDecodeError as e:
         raise ValueError(
             f"Invalid JSON in {meta_path}: {e}\n"
-            f"Make sure meta.json uses double quotes and has no trailing commas."
+            f"Make sure meta.json uses double quotes and has no comments or trailing commas."
         ) from e
 
     name = meta.get("name")

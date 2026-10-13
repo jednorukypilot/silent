@@ -17,7 +17,7 @@ Works directory structure:
             image2.jpg
             image3.jpg
 
-See meta.example.json for the meta.json format. A folder whose meta.json
+See meta.example.jsonc for an annotated meta.json. A folder whose meta.json
 has no "name" creates no work: its images are registered and placed as hero or
 contact backdrops only.
 
