@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"generate:home-tiles": "node ./scripts/generate-works-data.mjs",
+		"generate:works-data": "node ./scripts/generate-works-data.mjs",
 		"predev": "node ./scripts/generate-works-data.mjs",
 		"prebuild": "node ./scripts/generate-works-data.mjs",
 		"precheck": "node ./scripts/generate-works-data.mjs",

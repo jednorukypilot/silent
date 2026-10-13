@@ -3,21 +3,22 @@ export type MenuTile = {
 	href: string;
 };
 
-export type DbWorkStill = {
+export type StillVariant = 'w480' | 'w960' | 'w1600';
+
+export type Surface = 'hero' | 'contact';
+
+/** One image in the stills registry, resolved from its generated entry. */
+export type Still = {
 	id: string;
-	createdAt: string;
-	workId: string;
-	alt: string | null;
 	fileKey: string;
-	sortOrder: number;
-	imageUrls: {
-		w480: string;
-		w960: string;
-		w1600: string;
-	};
+	alt: string | null;
+	aspectRatio: number | null;
+	/** Tiny blurred data URI shown while the full image loads. */
+	lqip: string | null;
 };
 
-export type WorksData = {
+/** A work as stored in works.json, still referencing its stills by id. */
+export type RawWork = {
 	id: string;
 	title: string;
 	description: string | null;
@@ -25,5 +26,12 @@ export type WorksData = {
 	aspectRatio: number | null;
 	year: number | null;
 	videoLink: string | null;
-	stills: DbWorkStill[];
+	listOrder: number | null;
+	homeOrder: number | null;
+	stillIds: string[];
+};
+
+/** A work with its stills resolved, as pages consume it. */
+export type WorksData = Omit<RawWork, 'stillIds'> & {
+	stills: Still[];
 };

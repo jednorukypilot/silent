@@ -1,3 +1,4 @@
+import base64
 import io
 import mimetypes
 from pathlib import Path
@@ -11,6 +12,11 @@ VARIANT_WIDTHS: dict[str, int] = {
     "w1600": 1600,
 }
 
+# Width of the inline placeholder shown while the real image loads. At 16px the
+# webp is ~130 bytes as a data URI, small enough to sit in the page source and
+# paint before any request goes out; it is heavily blurred in CSS anyway.
+LQIP_WIDTH = 16
+
 
 # Images
 def open_image(path: Path) -> Image.Image:
@@ -20,11 +26,26 @@ def open_image(path: Path) -> Image.Image:
         img = img.convert("RGB")
     return img
 
-def compute_aspect_ratio(img: Image.Image) -> float:
+def image_size(img: Image.Image) -> tuple[int, int]:
     w, h = img.size
-    if h == 0:
-        raise ValueError("Image height is zero")
+    if w == 0 or h == 0:
+        raise ValueError("Image has a zero dimension")
+    return w, h
+
+def compute_aspect_ratio(img: Image.Image) -> float:
+    w, h = image_size(img)
     return w / h
+
+def make_lqip(img: Image.Image, width: int = LQIP_WIDTH, quality: int = 50) -> str:
+    """A tiny blurred-up placeholder for this image, as a data URI."""
+    height = max(1, round(img.height * width / img.width))
+    small = img.resize((width, height), Image.Resampling.LANCZOS)
+
+    buf = io.BytesIO()
+    small.save(buf, format="WEBP", quality=quality, method=6)
+    encoded = base64.b64encode(buf.getvalue()).decode("ascii")
+
+    return f"data:image/webp;base64,{encoded}"
 
 def resize_to_webp(img: Image.Image, max_width: int, quality: int = 82):
     w, h = img.size

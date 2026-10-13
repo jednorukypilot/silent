@@ -108,7 +108,8 @@
 				>
 					{#if tile.stills[0]}
 						<ResponsiveImage
-							imageUrls={tile.stills[0].imageUrls}
+							fileKey={tile.stills[0].fileKey}
+							lqip={tile.stills[0].lqip}
 							debugLabel={`${tile.title} cover still (${tile.stills[0].id})`}
 							alt={tile.stills[0].alt ?? `${tile.title} cover still`}
 							aspectRatio={tile.aspectRatio ?? fallbackAspectRatio}

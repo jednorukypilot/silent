@@ -8,19 +8,19 @@ const appRoot = path.resolve(__dirname, '..');
 const envPath = path.join(appRoot, '.env');
 const generatedDir = path.join(appRoot, 'src', 'lib', 'content', 'generated');
 const BUCKET = 'stills';
+const VARIANTS = ['w480', 'w960', 'w1600'];
+const SURFACES = ['hero', 'contact'];
 
-const DATASETS = [
-	{
-		name: 'home tiles',
-		orderField: 'highlighted',
-		outputPath: path.join(generatedDir, 'home-tiles.json')
-	},
-	{
-		name: 'works list',
-		orderField: 'displayed',
-		outputPath: path.join(generatedDir, 'works-list.json')
-	}
-];
+// Output is normalized on purpose. Every still is written once into stills.json
+// and referenced by id everywhere else, so a still used by a work, the hero and
+// the contact page costs one entry rather than three. Image URLs are rebuilt
+// from the file key at runtime instead of being stored: there are three of them
+// per still and they are ~110 characters each, which dwarfs the data they encode.
+const OUTPUTS = {
+	stills: path.join(generatedDir, 'stills.json'),
+	works: path.join(generatedDir, 'works.json'),
+	placements: path.join(generatedDir, 'placements.json')
+};
 
 function log(message, details) {
 	if (details === undefined) {
@@ -38,22 +38,35 @@ function fail(message, details) {
 
 const worksSelection = `
   id,
-  created_at,
-  displayed,
-  highlighted,
   name,
   description,
   description_long,
   aspect_ratio,
   year,
   video_link,
+  displayed,
+  highlighted,
   works_stills (
+    sort_order,
+    stills (
+      id,
+      file_key,
+      alt,
+      aspect_ratio,
+      lqip
+    )
+  )
+`;
+
+const placementsSelection = `
+  surface,
+  sort_order,
+  stills (
     id,
-    created_at,
-    work_id,
     file_key,
     alt,
-    sort_order
+    aspect_ratio,
+    lqip
   )
 `;
 
@@ -108,120 +121,191 @@ async function loadLocalEnv() {
 	}
 }
 
-async function readExistingTiles(outputPath) {
-	const content = await fs.readFile(outputPath, 'utf8');
-	return JSON.parse(content);
-}
-
-function validateTiles(tiles, outputPath) {
-	if (!Array.isArray(tiles)) {
-		fail(`Generated works data at ${outputPath} must be an array.`);
-	}
-
-	for (const [tileIndex, tile] of tiles.entries()) {
-		if (!Array.isArray(tile.stills)) {
-			fail(`Tile at index ${tileIndex} is missing a stills array.`, tile);
-		}
-
-		for (const [stillIndex, still] of tile.stills.entries()) {
-			const imageUrls = still?.imageUrls;
-
-			if (!imageUrls?.w480 || !imageUrls?.w960 || !imageUrls?.w1600) {
-				fail(
-					`Still ${still?.id ?? stillIndex} in tile ${tile?.id ?? tileIndex} is missing imageUrls. Regenerate works data before building.`,
-					{ tileId: tile?.id, stillId: still?.id, imageUrls }
-				);
-			}
-		}
-	}
-
-	log('Validated generated works data', {
-		output: path.relative(appRoot, outputPath),
-		tiles: tiles.length,
-		stills: tiles.reduce((count, tile) => count + tile.stills.length, 0)
-	});
-}
-
-function createImageUrl(baseUrl, fileKey, variant) {
-	return `${baseUrl}/storage/v1/object/public/${BUCKET}/${variant}/${fileKey}.webp`;
-}
-
-function mapStill(still, baseUrl) {
+function mapStill(still) {
 	return {
-		id: still.id,
-		createdAt: still.created_at,
-		workId: still.work_id,
-		alt: still.alt,
 		fileKey: still.file_key,
-		sortOrder: still.sort_order,
-		imageUrls: {
-			w480: createImageUrl(baseUrl, still.file_key, 'w480'),
-			w960: createImageUrl(baseUrl, still.file_key, 'w960'),
-			w1600: createImageUrl(baseUrl, still.file_key, 'w1600')
-		}
+		alt: still.alt,
+		aspectRatio: still.aspect_ratio === null ? null : Number(still.aspect_ratio),
+		lqip: still.lqip ?? null
 	};
 }
 
-function mapWork(work, baseUrl) {
+function mapWork(work, stillIds) {
 	return {
 		id: work.id,
 		title: work.name,
 		description: work.description,
 		descriptionLong: work.description_long,
-		aspectRatio: work.aspect_ratio,
+		aspectRatio: work.aspect_ratio === null ? null : Number(work.aspect_ratio),
 		year: work.year,
 		videoLink: work.video_link,
-		stills: (work.works_stills ?? []).map((still) => mapStill(still, baseUrl))
+		listOrder: work.displayed,
+		homeOrder: work.highlighted,
+		stillIds
 	};
 }
 
-async function writeTiles(tiles, outputPath) {
-	validateTiles(tiles, outputPath);
-	await fs.mkdir(path.dirname(outputPath), { recursive: true });
-	await fs.writeFile(outputPath, `${JSON.stringify(tiles, null, 2)}\n`, 'utf8');
-	log(`Generated ${tiles.length} works data entries`, {
-		output: path.relative(appRoot, outputPath)
+function byOrderThenTitle(field) {
+	return (a, b) =>
+		(a[field] ?? Infinity) - (b[field] ?? Infinity) || a.title.localeCompare(b.title);
+}
+
+// Reading back what was just written catches a dataset that is internally broken
+// (a work pointing at a still that no longer exists) before it reaches the build,
+// and does the same job for the reused-on-disk fallback below.
+function validateDataset({ stills, works, placements }) {
+	if (!stills?.items || typeof stills.items !== 'object') {
+		fail('stills.json must have an items object.');
+	}
+
+	if (!stills.baseUrl) {
+		fail('stills.json is missing baseUrl; image URLs cannot be rebuilt without it.');
+	}
+
+	for (const [id, still] of Object.entries(stills.items)) {
+		if (!still?.fileKey) {
+			fail(`Still ${id} has no fileKey.`, still);
+		}
+	}
+
+	if (!Array.isArray(works)) {
+		fail('works.json must be an array.');
+	}
+
+	for (const work of works) {
+		if (!Array.isArray(work.stillIds)) {
+			fail(`Work ${work?.id} is missing a stillIds array.`, work);
+		}
+
+		for (const stillId of work.stillIds) {
+			if (!stills.items[stillId]) {
+				fail(`Work ${work.id} references unknown still ${stillId}.`);
+			}
+		}
+	}
+
+	for (const surface of SURFACES) {
+		const ids = placements?.[surface];
+		if (!Array.isArray(ids)) {
+			fail(`placements.json is missing the ${surface} array.`, placements);
+		}
+
+		for (const stillId of ids) {
+			if (!stills.items[stillId]) {
+				fail(`Placement ${surface} references unknown still ${stillId}.`);
+			}
+		}
+	}
+
+	log('Validated generated data', {
+		stills: Object.keys(stills.items).length,
+		works: works.length,
+		placements: Object.fromEntries(SURFACES.map((s) => [s, placements[s].length]))
 	});
 }
 
-async function writeFallback(outputPath) {
-	try {
-		const existingTiles = await readExistingTiles(outputPath);
-		validateTiles(existingTiles, outputPath);
-		log('Using existing generated works data because env is incomplete', {
-			output: path.relative(appRoot, outputPath)
-		});
-	} catch {
-		log('No valid generated works data found; writing empty fallback dataset', {
-			output: path.relative(appRoot, outputPath)
-		});
-		await writeTiles([], outputPath);
+async function writeDataset(dataset) {
+	validateDataset(dataset);
+	await fs.mkdir(generatedDir, { recursive: true });
+
+	for (const [key, outputPath] of Object.entries(OUTPUTS)) {
+		await fs.writeFile(outputPath, `${JSON.stringify(dataset[key], null, 2)}\n`, 'utf8');
 	}
+
+	log('Wrote generated data', {
+		output: path.relative(appRoot, generatedDir),
+		files: Object.keys(OUTPUTS).length
+	});
 }
 
-async function fetchDataset(supabaseClient, dataset, publicBaseUrl) {
-	log(`Fetching ${dataset.name} from Supabase`, { orderField: dataset.orderField });
-
-	const { data, error } = await supabaseClient
-		.from('works')
-		.select(worksSelection)
-		.not(dataset.orderField, 'is', null)
-		.order(dataset.orderField, { ascending: true })
-		.order('sort_order', { foreignTable: 'works_stills', ascending: true });
-
-	if (error) {
-		throw error;
-	}
-
-	log(`Fetched ${dataset.name} from Supabase`, {
-		works: data?.length ?? 0,
-		stills: (data ?? []).reduce((count, work) => count + (work.works_stills?.length ?? 0), 0)
-	});
-
-	await writeTiles(
-		(data ?? []).map((work) => mapWork(work, publicBaseUrl)),
-		dataset.outputPath
+async function readDataset() {
+	const entries = await Promise.all(
+		Object.entries(OUTPUTS).map(async ([key, outputPath]) => [
+			key,
+			JSON.parse(await fs.readFile(outputPath, 'utf8'))
+		])
 	);
+
+	return Object.fromEntries(entries);
+}
+
+async function writeFallback() {
+	try {
+		const existing = await readDataset();
+		validateDataset(existing);
+		log('Using existing generated data because env is incomplete');
+	} catch {
+		log('No valid generated data found; writing an empty fallback dataset');
+		await writeDataset({
+			stills: { baseUrl: 'about:blank', bucket: BUCKET, variants: VARIANTS, items: {} },
+			works: [],
+			placements: Object.fromEntries(SURFACES.map((surface) => [surface, []]))
+		});
+	}
+}
+
+async function fetchDataset(supabaseClient, publicBaseUrl) {
+	log('Fetching works and placements from Supabase');
+
+	const [worksResult, placementsResult] = await Promise.all([
+		supabaseClient
+			.from('works')
+			.select(worksSelection)
+			.or('displayed.not.is.null,highlighted.not.is.null'),
+		supabaseClient.from('still_placements').select(placementsSelection)
+	]);
+
+	if (worksResult.error) throw worksResult.error;
+	if (placementsResult.error) throw placementsResult.error;
+
+	const items = {};
+
+	const works = (worksResult.data ?? []).map((work) => {
+		const memberships = (work.works_stills ?? [])
+			.filter((row) => row.stills)
+			.sort((a, b) => a.sort_order - b.sort_order);
+
+		for (const row of memberships) {
+			items[row.stills.id] = mapStill(row.stills);
+		}
+
+		return mapWork(
+			work,
+			memberships.map((row) => row.stills.id)
+		);
+	});
+
+	works.sort(byOrderThenTitle('listOrder'));
+
+	const placements = Object.fromEntries(SURFACES.map((surface) => [surface, []]));
+
+	for (const row of (placementsResult.data ?? []).filter((row) => row.stills)) {
+		if (!placements[row.surface]) {
+			log(`Ignoring placement for unknown surface "${row.surface}"`);
+			continue;
+		}
+
+		items[row.stills.id] = mapStill(row.stills);
+		placements[row.surface].push({ id: row.stills.id, sortOrder: row.sort_order });
+	}
+
+	for (const surface of SURFACES) {
+		placements[surface] = placements[surface]
+			.sort((a, b) => (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity))
+			.map((row) => row.id);
+	}
+
+	log('Fetched from Supabase', {
+		works: works.length,
+		stills: Object.keys(items).length,
+		placements: Object.fromEntries(SURFACES.map((s) => [s, placements[s].length]))
+	});
+
+	await writeDataset({
+		stills: { baseUrl: publicBaseUrl, bucket: BUCKET, variants: VARIANTS, items },
+		works,
+		placements
+	});
 }
 
 async function main() {
@@ -237,12 +321,10 @@ async function main() {
 
 	if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 		console.warn(
-			'[generate-works-data] Missing Supabase env vars. Reusing existing generated works data if present.'
+			'[generate-works-data] Missing Supabase env vars. Reusing existing generated data if present.'
 		);
 
-		for (const dataset of DATASETS) {
-			await writeFallback(dataset.outputPath);
-		}
+		await writeFallback();
 		return;
 	}
 
@@ -259,9 +341,7 @@ async function main() {
 		}
 	});
 
-	for (const dataset of DATASETS) {
-		await fetchDataset(supabaseClient, dataset, publicBaseUrl);
-	}
+	await fetchDataset(supabaseClient, publicBaseUrl);
 }
 
 main().catch((error) => {

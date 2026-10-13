@@ -15,7 +15,7 @@
 
 <div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden">
 	{#if shouldShowHero}
-		<OverlayHero onIntroDone={handleIntroDone} />
+		<OverlayHero onIntroDone={handleIntroDone} backdrop={data.hero} />
 	{/if}
 	<div class="hidden h-full w-full md:block">
 		<ScrollableTiles tileData={data.tiles} />

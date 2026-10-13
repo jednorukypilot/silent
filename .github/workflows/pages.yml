@@ -36,7 +36,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
-        run: npm --prefix app run generate:home-tiles
+        run: npm --prefix app run generate:works-data
 
       - name: Build site
         env:

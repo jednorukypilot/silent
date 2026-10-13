@@ -93,7 +93,7 @@
 				class="mt-6 mb-4 flex w-full flex-row items-start justify-between gap-10 overflow-hidden"
 			>
 				<div class="flex flex-col gap-4">
-					{#each (data.work.descriptionLong ?? '').split('\\n').filter(Boolean) as paragraph}
+					{#each (data.work.descriptionLong ?? '').split('\n').filter(Boolean) as paragraph}
 						<p class="text-lg text-black/80">{paragraph}</p>
 					{/each}
 				</div>

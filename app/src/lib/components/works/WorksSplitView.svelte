@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
+	import { stillUrl } from '$lib/stills';
 	import type { WorksData } from '$lib/model/types';
 
 	let { works = [] }: { works: WorksData[] } = $props();
@@ -90,9 +91,9 @@
 	onMount(() => {
 		for (const work of works) {
 			const still = work.stills[0];
-			if (!still?.imageUrls?.w480) continue;
+			if (!still) continue;
 			const preload = new Image();
-			preload.src = still.imageUrls.w480;
+			preload.src = stillUrl(still.fileKey, 'w480');
 		}
 	});
 
@@ -153,7 +154,8 @@
 				{#key activeWork?.id}
 					<div class="absolute inset-0" transition:fade={{ duration: animationDuration }}>
 						<ResponsiveImage
-							imageUrls={previewStill.imageUrls}
+							fileKey={previewStill.fileKey}
+							lqip={previewStill.lqip}
 							debugLabel={`${activeWork?.title} preview still (${previewStill.id})`}
 							alt={previewStill.alt ?? `${activeWork?.title} preview`}
 							aspectRatio={activeWork?.aspectRatio ?? fallbackAspectRatio}

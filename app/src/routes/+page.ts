@@ -1,9 +1,11 @@
-import type { WorksData } from '$lib/model/types';
-import tiles from '$lib/content/generated/home-tiles.json';
+import { homeWorks } from '$lib/works';
+import { placedStills } from '$lib/stills';
+import { backdropFor } from '$lib/backdrop';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = () => {
 	return {
-		tiles: tiles as WorksData[]
+		tiles: homeWorks,
+		hero: backdropFor('hero', placedStills('hero'))
 	};
 };

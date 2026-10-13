@@ -1,12 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { asset } from '$app/paths';
+	import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
+	import { resolveBackdrop, type Backdrop } from '$lib/backdrop';
+	import type { Still } from '$lib/model/types';
 
 	type Props = {
 		onIntroDone?: () => void;
+		backdrop?: Backdrop;
 	};
 
-	let { onIntroDone = () => {} }: Props = $props();
+	let { onIntroDone = () => {}, backdrop: source }: Props = $props();
+
+	// Under the 'build' strategy this is already the final still, so it is in the
+	// prerendered HTML and starts downloading during parse. Under 'visit' it is
+	// null until onMount picks one. Either way, no stills placed on the hero
+	// surface leaves it null and the banner stays plain black-and-logo.
+	let backdrop = $state<Still | null>(source?.chosen ?? null);
 
 	let introDone = $state(false);
 	let isAnimating = $state(false);
@@ -178,6 +188,10 @@
 	}
 
 	onMount(() => {
+		if (source) {
+			backdrop = resolveBackdrop(source);
+		}
+
 		window.addEventListener('wheel', handleWheel, { passive: false });
 
 		return () => {
@@ -215,7 +229,23 @@
 			}
 		}}
 	>
-		<div class="flex h-[calc(100vh-4rem)] items-center justify-center">
+		{#if backdrop}
+			<div class="pointer-events-none absolute inset-0">
+				<ResponsiveImage
+					fileKey={backdrop.fileKey}
+					lqip={backdrop.lqip}
+					debugLabel={`hero backdrop (${backdrop.id})`}
+					alt=""
+					aspectRatio={backdrop.aspectRatio ?? 16 / 9}
+					sizes="100vw"
+					eager
+					background="#000000"
+				/>
+			</div>
+			<div class="pointer-events-none absolute inset-0 bg-black/40"></div>
+		{/if}
+
+		<div class="relative flex h-[calc(100vh-4rem)] items-center justify-center">
 			<div class="flex h-56 w-56 items-center justify-center bg-white">
 				<img src={asset('/logo.svg')} alt="Logo" class="h-24 w-24 object-contain" />
 			</div>

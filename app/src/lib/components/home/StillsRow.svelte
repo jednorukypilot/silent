@@ -32,7 +32,8 @@
 				<div class="h-full bg-neutral-800">
 					{#if still}
 						<ResponsiveImage
-							imageUrls={still.imageUrls}
+							fileKey={still.fileKey}
+							lqip={still.lqip}
 							debugLabel={`${tile.title} still ${index + 1} (${still.id})`}
 							alt={still.alt ?? `${tile.title} still ${index + 1}`}
 							aspectRatio={stillAspectRatio}

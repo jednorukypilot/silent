@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { stillSrcset, stillUrl } from '$lib/stills';
+
 	let {
-		imageUrls,
+		fileKey,
+		lqip = null,
 		debugLabel = 'unknown image',
 		alt = '',
 		aspectRatio,
@@ -10,11 +13,8 @@
 		objectPosition = 'center',
 		background = '#111827'
 	}: {
-		imageUrls: {
-			w480: string;
-			w960: string;
-			w1600: string;
-		};
+		fileKey: string | null | undefined;
+		lqip?: string | null;
 		debugLabel?: string;
 		alt?: string;
 		aspectRatio: number;
@@ -26,18 +26,26 @@
 	} = $props();
 
 	let loaded = $state(false);
-	let hasLoggedMissingImageUrls = false;
-	const hasImageUrls = $derived(Boolean(imageUrls?.w480 && imageUrls?.w960 && imageUrls?.w1600));
-	const srcset = $derived(
-		hasImageUrls
-			? `${imageUrls.w480} 480w, ${imageUrls.w960} 960w, ${imageUrls.w1600} 1600w`
-			: undefined
-	);
+	let imageEl = $state<HTMLImageElement | null>(null);
+	let hasLoggedMissingFileKey = false;
+
+	const hasImage = $derived(Boolean(fileKey));
+	const src = $derived(fileKey ? stillUrl(fileKey, 'w960') : undefined);
+	const srcset = $derived(fileKey ? stillSrcset(fileKey) : undefined);
+
+	// A cached image can finish loading before this component attaches its load
+	// handler — on a prerendered page that is the common case — which would
+	// otherwise leave the placeholder up permanently.
+	$effect(() => {
+		if (imageEl?.complete) {
+			loaded = true;
+		}
+	});
 
 	$effect(() => {
-		if (!hasImageUrls && !hasLoggedMissingImageUrls) {
-			hasLoggedMissingImageUrls = true;
-			console.warn(`[ResponsiveImage] Missing imageUrls for ${debugLabel}`, { imageUrls, alt });
+		if (!hasImage && !hasLoggedMissingFileKey) {
+			hasLoggedMissingFileKey = true;
+			console.warn(`[ResponsiveImage] Missing fileKey for ${debugLabel}`, { alt });
 		}
 	});
 </script>
@@ -47,12 +55,23 @@
 	class:is-loaded={loaded}
 	style={`aspect-ratio: ${aspectRatio}; background: ${background};`}
 >
-	{#if background !== 'transparent'}
+	{#if lqip}
+		<img
+			class="image-lqip"
+			class:is-cover={objectFit === 'cover'}
+			src={lqip}
+			alt=""
+			aria-hidden="true"
+			style={`object-fit: ${objectFit}; object-position: ${objectPosition};`}
+		/>
+	{:else if background !== 'transparent'}
 		<div class="image-placeholder" aria-hidden="true"></div>
 	{/if}
-	{#if hasImageUrls}
+	{#if hasImage}
 		<img
-			src={imageUrls.w960}
+			bind:this={imageEl}
+			class="image-main"
+			{src}
 			{srcset}
 			{sizes}
 			{alt}
@@ -62,6 +81,11 @@
 			fetchpriority={eager ? 'high' : 'auto'}
 			onload={() => {
 				loaded = true;
+			}}
+			onerror={() => {
+				// Leave the blurred placeholder in place rather than revealing a broken
+				// image, but say so, since a missing size variant is otherwise invisible.
+				console.warn(`[ResponsiveImage] Failed to load ${debugLabel}`, { src });
 			}}
 		/>
 	{/if}
@@ -90,12 +114,39 @@
 		pointer-events: none;
 	}
 
-	img {
+	/* The real image is painted on top of this, so with object-fit: cover the
+	   placeholder stops being visible the instant the image decodes — no fade is
+	   needed and none is wanted, since a fade would keep the blur on screen
+	   after the image is already available. The transition below only matters
+	   for object-fit: contain, where the placeholder shows around the letterbox
+	   and has to be taken away explicitly. */
+	.image-lqip {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		display: block;
+		filter: blur(16px);
+		transition: opacity 160ms ease;
+		pointer-events: none;
+	}
+
+	/* Cover fills the box, so the blur's soft edge is clipped by the shell and the
+	   scale hides it entirely. Contain letterboxes, where scaling up would smear
+	   the blur past where the image actually sits. */
+	.image-lqip.is-cover {
+		transform: scale(1.1);
+	}
+
+	.image-shell.is-loaded .image-lqip {
+		opacity: 0;
+	}
+
+	.image-main {
 		position: relative;
 		width: 100%;
 		height: 100%;
 		display: block;
-		object-fit: cover;
 	}
 
 	.image-shell.is-loaded .image-placeholder {
