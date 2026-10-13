@@ -62,7 +62,10 @@
 	const embedUrl = getEmbedUrl(data.work.videoLink);
 </script>
 
-<div class="absolute top-16 right-0 bottom-0 left-0 overflow-y-auto">
+<!-- overscroll-y-none: without it the iOS rubber band at the bottom pulls the black
+     page canvas up under the white info card. Stopping dead at the edge instead
+     lets the card read as running off the bottom of the screen. -->
+<div class="absolute top-16 right-0 bottom-0 left-0 overflow-y-auto overscroll-y-none">
 	<div class="flex flex-col bg-black text-white">
 		<div class="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-black text-white">
 			{#if embedUrl}

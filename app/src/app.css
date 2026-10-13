@@ -45,6 +45,18 @@
 	}
 }
 
+/* On phones the page itself is the black canvas the covers sit on, so the browser
+   chrome (status bar, URL bar — paired with the theme-color meta in app.html) and any
+   overscroll read black instead of white. Site-wide on purpose, not just the home
+   carousel. Unlayered so nothing emitted into a layer can take it back; daisyUI only
+   defines --color-base-100 and never paints the page, so desktop keeps the UA white. */
+@media (width < 48rem) {
+	html,
+	body {
+		background-color: #000000;
+	}
+}
+
 /* Unlayered: daisyUI's own scrollbar-color reset (in @layer base) would otherwise win. */
 :root {
 	scrollbar-color: #4d4d4d #000000;

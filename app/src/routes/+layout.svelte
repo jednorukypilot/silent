@@ -6,7 +6,7 @@
 	let { children } = $props<{ children: any }>();
 </script>
 
-<div class="relative h-screen">
+<div class="relative h-dvh">
 	<TopBar />
 	{@render children()}
 </div>

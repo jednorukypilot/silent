@@ -1,17 +1,17 @@
 {
-	"hero": [
-		"4fb65fea-6744-4d62-bebe-f24c70637f9a",
-		"0e8f53d0-72ed-4233-a37b-e02dac7fbd08",
-		"fbe2aea3-3268-4495-97b9-6187fcd47070",
-		"8bb0a562-d491-4e30-abac-c8fd43a30636",
-		"6151b38f-1c45-456f-8770-5988693289d6",
-		"9f0fadfc-4c68-405b-9d9d-1126380a8de6",
-		"a4de9ab3-be93-4a14-ba85-91a40f8f9747"
-	],
-	"contact": [
-		"64c9ec0b-5251-45be-8c43-e01e13cdd445",
-		"1b49d3da-bbce-4d07-ae76-0cc8b7133041",
-		"60f8bc43-699f-48bb-bc7d-3ac6174e7d1a",
-		"2be55569-60e1-4de5-bcc6-7edd8e356728"
-	]
+  "hero": [
+    "4fb65fea-6744-4d62-bebe-f24c70637f9a",
+    "0e8f53d0-72ed-4233-a37b-e02dac7fbd08",
+    "fbe2aea3-3268-4495-97b9-6187fcd47070",
+    "8bb0a562-d491-4e30-abac-c8fd43a30636",
+    "6151b38f-1c45-456f-8770-5988693289d6",
+    "9f0fadfc-4c68-405b-9d9d-1126380a8de6",
+    "a4de9ab3-be93-4a14-ba85-91a40f8f9747"
+  ],
+  "contact": [
+    "64c9ec0b-5251-45be-8c43-e01e13cdd445",
+    "1b49d3da-bbce-4d07-ae76-0cc8b7133041",
+    "60f8bc43-699f-48bb-bc7d-3ac6174e7d1a",
+    "2be55569-60e1-4de5-bcc6-7edd8e356728"
+  ]
 }
