@@ -90,7 +90,7 @@
 	// displayed still is fetched normally (via its own srcset) the moment it's hovered.
 	onMount(() => {
 		for (const work of works) {
-			const still = work.stills[0];
+			const still = work.cover;
 			if (!still) continue;
 			const preload = new Image();
 			preload.src = stillUrl(still.fileKey, 'w480');
@@ -104,7 +104,7 @@
 	});
 
 	const activeWork = $derived(works[activeIndex] ?? null);
-	const previewStill = $derived(activeWork?.stills[0] ?? null);
+	const previewStill = $derived(activeWork?.cover ?? null);
 	const hoverDetails = $derived(
 		activeWork
 			? [activeWork.year ? String(activeWork.year) : null, activeWork.description]

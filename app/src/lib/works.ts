@@ -4,8 +4,16 @@ import type { RawWork, WorksData } from '$lib/model/types';
 
 const raw = generated as RawWork[];
 
-function hydrate({ stillIds, ...work }: RawWork): WorksData {
-	return { ...work, stills: getStills(stillIds) };
+function hydrate({ stillIds, coverStillId, ...work }: RawWork): WorksData {
+	const stills = getStills(stillIds);
+
+	// An unset, stale or foreign cover_still_id just falls back to the first
+	// still, so nothing has to validate it.
+	return {
+		...work,
+		stills,
+		cover: stills.find((still) => still.id === coverStillId) ?? stills[0] ?? null
+	};
 }
 
 function byOrder(field: 'listOrder' | 'homeOrder') {

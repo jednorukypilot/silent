@@ -28,10 +28,13 @@ export type RawWork = {
 	videoLink: string | null;
 	listOrder: number | null;
 	homeOrder: number | null;
+	coverStillId: string | null;
 	stillIds: string[];
 };
 
 /** A work with its stills resolved, as pages consume it. */
-export type WorksData = Omit<RawWork, 'stillIds'> & {
+export type WorksData = Omit<RawWork, 'stillIds' | 'coverStillId'> & {
 	stills: Still[];
+	/** The one still that represents this work; falls back to the first. */
+	cover: Still | null;
 };

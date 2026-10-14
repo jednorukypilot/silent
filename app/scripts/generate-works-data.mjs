@@ -46,6 +46,7 @@ const worksSelection = `
   video_link,
   displayed,
   highlighted,
+  cover_still_id,
   works_stills (
     sort_order,
     stills (
@@ -141,6 +142,7 @@ function mapWork(work, stillIds) {
 		videoLink: work.video_link,
 		listOrder: work.displayed,
 		homeOrder: work.highlighted,
+		coverStillId: work.cover_still_id ?? null,
 		stillIds
 	};
 }
