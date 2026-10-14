@@ -100,7 +100,7 @@
 					type="button"
 					class="text-md mt-2.5 text-left transition-all hover:cursor-pointer"
 					style="
-						font-weight: {Math.max(100, Math.round(weights[index] * 300))};
+						font-weight: {Math.round(400 + weights[index] * 200)};
 						opacity: {0.35 + weights[index] * 2.5};
 					"
 					onfocus={() => {

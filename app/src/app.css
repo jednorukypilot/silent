@@ -1,11 +1,13 @@
 @import 'tailwindcss';
 
 @theme {
-	--font-sans:
-		'Iosevka Charon Mono', ui-monospace, 'SFMono-Regular', 'Cascadia Code', 'Segoe UI Mono',
-		Consolas, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-		'Noto Color Emoji';
-	--font-serif: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+	/* Playfair Display everywhere: --font-sans is what html and every unstyled element
+	   inherit, so the serif is the site's only typeface rather than an accent on top of a
+	   different body font. --font-mono is overridden too so a stray utility class can't
+	   reintroduce a second family. */
+	--font-sans: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+	--font-serif: var(--font-sans);
+	--font-mono: var(--font-sans);
 }
 
 @plugin "daisyui" {
@@ -40,7 +42,9 @@
 @layer base {
 	html {
 		font-family: var(--font-sans);
-		font-weight: 200;
+		/* Playfair Display's variable range starts at 400 — anything lighter was only ever
+		   rendering as 400 (or a synthesized fake), so the base weight says 400 outright. */
+		font-weight: 400;
 		height: 100%;
 	}
 }

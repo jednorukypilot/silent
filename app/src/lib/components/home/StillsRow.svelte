@@ -21,7 +21,7 @@
 	);
 </script>
 
-<article class="group w-full bg-transparent">
+<article class="group w-full bg-transparent pb-1">
 	<div class="flex h-full w-full flex-col overflow-hidden">
 		<button
 			class="grid h-full w-full grid-cols-3 gap-px overflow-hidden bg-white hover:cursor-pointer"

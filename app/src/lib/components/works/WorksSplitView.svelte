@@ -11,8 +11,8 @@
 
 	const fallbackAspectRatio = 16 / 9;
 	const animationDuration = 50;
-	const activeFontWeight = 390;
-	const inactiveFontWeight = 100;
+	const activeFontWeight = 600;
+	const inactiveFontWeight = 400;
 	const maxImageWidth = 680;
 
 	let activeIndex = $state(-1);

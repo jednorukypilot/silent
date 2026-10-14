@@ -15,11 +15,11 @@
 
 <style>
 	a {
-		font-weight: 100;
+		font-weight: 400;
 	}
 
 	a:hover,
 	a:focus {
-		font-weight: 390;
+		font-weight: 700;
 	}
 </style>
