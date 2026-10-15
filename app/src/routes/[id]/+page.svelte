@@ -87,13 +87,13 @@
 		<div class="flex flex-col items-start justify-start gap-2 bg-white px-8 py-4 text-black">
 			<div class="flex w-full flex-row items-start justify-between gap-10 overflow-hidden">
 				<h1 class="text-4xl">{data.work.title}</h1>
-				<p class="hidden text-sm tracking-[0.3em] text-black/60 uppercase xl:inline">
+				<!-- <p class="hidden font-mono text-sm tracking-[0.3em] text-black/60 uppercase xl:inline">
 					{data.work.id}
-				</p>
+				</p> -->
 			</div>
 			<p class="text-lg text-black/80">{data.work.year}</p>
 			<div
-				class="mt-6 mb-4 flex w-full flex-row items-start justify-between gap-10 overflow-hidden"
+				class="mt-6 mb-4 flex w-full flex-row items-end justify-between gap-10 overflow-hidden"
 			>
 				<div class="flex flex-col gap-4">
 					{#each (data.work.descriptionLong ?? '').split('\n').filter(Boolean) as paragraph}

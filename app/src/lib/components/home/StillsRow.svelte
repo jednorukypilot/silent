@@ -17,7 +17,7 @@
 	const hoverDetails = $derived(
 		[tile.year ? String(tile.year) : null, tile.description]
 			.filter((value): value is string => Boolean(value))
-			.join(' / ')
+			.join(' | ')
 	);
 </script>
 

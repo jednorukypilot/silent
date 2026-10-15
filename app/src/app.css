@@ -2,12 +2,16 @@
 
 @theme {
 	/* Playfair Display everywhere: --font-sans is what html and every unstyled element
-	   inherit, so the serif is the site's only typeface rather than an accent on top of a
-	   different body font. --font-mono is overridden too so a stray utility class can't
-	   reintroduce a second family. */
+	   inherit, so the serif is the site's body text rather than an accent on top of a
+	   different font. --font-serif aliases it so a stray utility class can't reintroduce a
+	   second family. --font-mono is the one deliberate exception, used only on the work id
+	   (routes/[id]) to set that identifier apart from the prose around it; it stays a
+	   platform stack so it costs no extra webfont request. */
 	--font-sans: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
 	--font-serif: var(--font-sans);
-	--font-mono: var(--font-sans);
+	--font-mono:
+		ui-monospace, 'SFMono-Regular', 'Cascadia Code', 'Segoe UI Mono', Consolas,
+		'Liberation Mono', Menlo, monospace;
 }
 
 @plugin "daisyui" {

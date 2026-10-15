@@ -126,12 +126,12 @@
 				<div
 					class="overlay-label pointer-events-none absolute inset-x-0 top-0 px-6 pt-7 font-serif leading-tight text-white"
 				>
-					<h2 class="text-3xl">{tile.title}</h2>
+					<h2 class="text-lg">{tile.title}</h2>
 					{#if tile.year}
-						<p class="text-3xl">{tile.year}</p>
+						<p class="text-lg">{tile.year}</p>
 					{/if}
 					{#if tile.description}
-						<p class="mt-1.5 text-lg">{tile.description}</p>
+						<p class="mt-1.5 text-base text-white/90">{tile.description}</p>
 					{/if}
 				</div>
 			</article>

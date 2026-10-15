@@ -34,12 +34,12 @@
 			{#each MENU_TILES as tile, i}
 				{#if i > 0}
 					<svg
-						class="mx-1 h-8 w-5 text-white/90"
+						class="h-8 w-4 text-white/90"
 						viewBox="0 0 12 20"
 						fill="none"
 						aria-hidden="true"
 					>
-						<path d="M9 3L3 17" stroke="currentColor" stroke-width="1.5" />
+						<path d="M6 3L6 17" stroke="currentColor" stroke-width="1.5" />
 					</svg>
 				{/if}
 				<a href={tile.href} class="text-sm" onclick={(event) => handleNav(event, tile.href)}
@@ -59,15 +59,16 @@
 				<g
 					class={`transition-opacity duration-200 ${mobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}
 				>
-					<path d="M9 3L3 17" stroke="currentColor" stroke-width="1.5" />
-					<path d="M18 3L12 17" stroke="currentColor" stroke-width="1.5" />
-					<path d="M27 3L21 17" stroke="currentColor" stroke-width="1.5" />
+					<path d="M9 3L9 17" stroke="currentColor" stroke-width="1.5" />
+					<path d="M15 3L15 17" stroke="currentColor" stroke-width="1.5" />
+					<path d="M21 3L21 17" stroke="currentColor" stroke-width="1.5" />
 				</g>
 				<g
 					class={`transition-opacity duration-200 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
 				>
-					<path d="M18 3L12 17" stroke="currentColor" stroke-width="1.5" />
-					<path d="M12 3L18 17" stroke="currentColor" stroke-width="1.5" />
+					<path d="M8 4L22 4" stroke="currentColor" stroke-width="1.5" />
+					<path d="M8 10L22 10" stroke="currentColor" stroke-width="1.5" />
+					<path d="M8 16L22 16" stroke="currentColor" stroke-width="1.5" />
 				</g>
 			</svg>
 		</button>

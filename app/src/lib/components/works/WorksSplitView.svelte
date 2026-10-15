@@ -109,7 +109,7 @@
 		activeWork
 			? [activeWork.year ? String(activeWork.year) : null, activeWork.description]
 					.filter((value): value is string => Boolean(value))
-					.join(' / ')
+					.join(' | ')
 			: ''
 	);
 </script>
