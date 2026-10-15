@@ -246,8 +246,8 @@
 		{/if}
 
 		<div class="relative flex h-[calc(100vh-4rem)] flex-col items-center justify-center">
-			<div class="flex h-56 w-56 items-center justify-center bg-white">
-				<img src={asset('/logo.svg')} alt="Logo" class="h-24 w-24 object-contain" />
+			<div class="flex h-56 w-56 items-center justify-center border-2 border-white">
+				<img src={asset('/logo.svg')} alt="Logo" class="h-28 w-28 object-contain invert" />
 			</div>
 			<p class="mt-6 text-xl tracking-[0.15em] text-white">Kryštof Tichý</p>
 		</div>
