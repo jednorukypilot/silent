@@ -142,7 +142,7 @@
 
 	<button
 		type="button"
-		class="flex h-full min-w-0 shrink grow-4 basis-0 flex-col overflow-hidden px-8 text-left hover:cursor-pointer disabled:cursor-default lg:pr-16 xl:pr-32 2xl:pr-48"
+		class="flex h-full min-w-0 shrink grow-4 basis-0 flex-col overflow-hidden px-8 pt-6 pb-12 text-left hover:cursor-pointer disabled:cursor-default lg:pr-16 xl:pr-32 2xl:pr-48"
 		disabled={!activeWork}
 		onclick={() => activeWork && goto(resolve(`/${activeWork.id}`))}
 	>
