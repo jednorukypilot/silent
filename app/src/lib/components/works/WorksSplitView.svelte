@@ -13,7 +13,7 @@
 	const animationDuration = 50;
 	const activeFontWeight = 600;
 	const inactiveFontWeight = 400;
-	const maxImageWidth = 680;
+	const maxImageWidth = 1280;
 
 	let activeIndex = $state(-1);
 
@@ -142,7 +142,7 @@
 
 	<button
 		type="button"
-		class="flex h-full min-w-0 shrink grow-2 basis-0 flex-col overflow-hidden px-8 text-left hover:cursor-pointer disabled:cursor-default lg:pr-16 xl:pr-32 2xl:pr-48"
+		class="flex h-full min-w-0 shrink grow-4 basis-0 flex-col overflow-hidden px-8 text-left hover:cursor-pointer disabled:cursor-default lg:pr-16 xl:pr-32 2xl:pr-48"
 		disabled={!activeWork}
 		onclick={() => activeWork && goto(resolve(`/${activeWork.id}`))}
 	>
@@ -159,7 +159,7 @@
 							debugLabel={`${activeWork?.title} preview still (${previewStill.id})`}
 							alt={previewStill.alt ?? `${activeWork?.title} preview`}
 							aspectRatio={activeWork?.aspectRatio ?? fallbackAspectRatio}
-							sizes="66vw"
+							sizes="80vw"
 							objectFit="contain"
 							objectPosition="center"
 							background="transparent"
