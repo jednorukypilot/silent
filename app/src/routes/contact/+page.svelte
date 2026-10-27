@@ -10,7 +10,7 @@
 	const NAME = 'Kryštof Tichý';
 	const ROLE = 'cinematographer';
 	const EMAIL = 'silentdp@icloud.com';
-	const VIMEO = 'https://vimeo.com/user30177605';
+	const VIMEO = 'https://vimeo.com/showcase/12465261?fl=so';
 	const INSTAGRAM = 'https://www.instagram.com/krystoftichy/';
 
 	// Null until mount under the 'visit' strategy, already set under 'build'.
@@ -51,7 +51,7 @@
 				<p class="text-base tracking-wide text-white md:text-lg">{ROLE}</p>
 			</div>
 
-			<div class="h-[max(33.333%,11rem)] max-h-[55%] w-full shrink-0 border border-white"></div>
+			<div class="h-[max(33.333%,11rem)] max-h-[55%] w-full shrink-0 border-2 border-white"></div>
 
 			<div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
 				<a
@@ -65,7 +65,7 @@
 						href={VIMEO}
 						target="_blank"
 						rel="noreferrer"
-						class="flex h-10 w-10 items-center justify-center border border-white text-white transition-colors hover:bg-white hover:text-black"
+						class="flex h-10 w-10 items-center justify-center border-2 border-white text-white transition-colors hover:bg-white hover:text-black"
 						aria-label="Vimeo"
 					>
 						<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -78,7 +78,7 @@
 						href={INSTAGRAM}
 						target="_blank"
 						rel="noreferrer"
-						class="flex h-10 w-10 items-center justify-center border border-white text-white transition-colors hover:bg-white hover:text-black"
+						class="flex h-10 w-10 items-center justify-center border-2 border-white text-white transition-colors hover:bg-white hover:text-black"
 						aria-label="Instagram"
 					>
 						<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
