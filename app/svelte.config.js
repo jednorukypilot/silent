@@ -21,9 +21,6 @@ const config = {
 			handleHttpError: 'warn',
 			handleMissingId: 'warn',
 			entries: ['*']
-		},
-		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/silent' : ''
 		}
 	}
 };
