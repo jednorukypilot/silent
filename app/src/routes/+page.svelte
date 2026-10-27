@@ -3,6 +3,7 @@
 	import HorizontalWorkViewer from '$lib/components/home/HorizontalWorkViewer.svelte';
 	import ScrollableTiles from '$lib/components/home/ScrollableTiles.svelte';
 	import OverlayHero from '$lib/components/OverlayHero.svelte';
+	import { SITE_NAME } from '$lib/model/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -12,6 +13,10 @@
 
 	function handleIntroDone() {}
 </script>
+
+<svelte:head>
+	<title>{SITE_NAME}</title>
+</svelte:head>
 
 <div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden">
 	{#if shouldShowHero}

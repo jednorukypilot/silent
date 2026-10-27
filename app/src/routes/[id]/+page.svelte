@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { workTitle } from '$lib/model/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -62,6 +63,10 @@
 	const embedUrl = getEmbedUrl(data.work.videoLink);
 </script>
 
+<svelte:head>
+	<title>{workTitle(data.work.title)}</title>
+</svelte:head>
+
 <!-- overscroll-y-none: without it the iOS rubber band at the bottom pulls the black
      page canvas up under the white info card. Stopping dead at the edge instead
      lets the card read as running off the bottom of the screen. -->
@@ -92,9 +97,7 @@
 				</p> -->
 			</div>
 			<p class="text-lg text-black/80">{data.work.year}</p>
-			<div
-				class="mt-6 mb-4 flex w-full flex-row items-end justify-between gap-10 overflow-hidden"
-			>
+			<div class="mt-6 mb-4 flex w-full flex-row items-end justify-between gap-10 overflow-hidden">
 				<div class="flex flex-col gap-4">
 					{#each (data.work.descriptionLong ?? '').split('\n').filter(Boolean) as paragraph}
 						<p class="text-lg text-black/80">{paragraph}</p>

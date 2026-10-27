@@ -1,10 +1,15 @@
 <script lang="ts">
 	import WorksList from '$lib/components/works/WorksList.svelte';
 	import WorksSplitView from '$lib/components/works/WorksSplitView.svelte';
+	import { sectionTitle } from '$lib/model/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 </script>
+
+<svelte:head>
+	<title>{sectionTitle('Works')}</title>
+</svelte:head>
 
 <div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden">
 	<div class="hidden h-full w-full md:block">

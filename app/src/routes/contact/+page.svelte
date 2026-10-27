@@ -3,12 +3,11 @@
 	import ResponsiveImage from '$lib/components/ResponsiveImage.svelte';
 	import { resolveBackdrop } from '$lib/backdrop';
 	import type { Still } from '$lib/model/types';
+	import { SITE_NAME as NAME, SITE_ROLE as ROLE, sectionTitle } from '$lib/model/site';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	const NAME = 'Kryštof Tichý';
-	const ROLE = 'cinematographer';
 	const EMAIL = 'silentdp@icloud.com';
 	const VIMEO = 'https://vimeo.com/showcase/12465261?fl=so';
 	const INSTAGRAM = 'https://www.instagram.com/krystoftichy/';
@@ -21,6 +20,10 @@
 		still = resolveBackdrop(data.contact);
 	});
 </script>
+
+<svelte:head>
+	<title>{sectionTitle('Contact')}</title>
+</svelte:head>
 
 <div class="absolute top-16 right-0 bottom-0 left-0 overflow-hidden bg-black">
 	{#if still}
