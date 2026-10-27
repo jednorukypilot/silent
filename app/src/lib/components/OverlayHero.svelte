@@ -245,7 +245,7 @@
 			<div class="pointer-events-none absolute inset-0 bg-black/40"></div>
 		{/if}
 
-		<div class="relative flex h-[calc(100vh-4rem)] flex-col items-center justify-center">
+		<div class="relative flex h-full flex-col items-center justify-center">
 			<div class="flex h-56 w-56 items-center justify-center border-2 border-white">
 				<img src={asset('/logo.svg')} alt="Logo" class="h-28 w-28 object-contain invert" />
 			</div>
