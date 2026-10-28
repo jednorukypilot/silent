@@ -47,6 +47,7 @@ const worksSelection = `
   displayed,
   highlighted,
   cover_still_id,
+  still_small_cover_id,
   works_stills (
     sort_order,
     stills (
@@ -143,13 +144,15 @@ function mapWork(work, stillIds) {
 		listOrder: work.displayed,
 		homeOrder: work.highlighted,
 		coverStillId: work.cover_still_id ?? null,
+		smallCoverStillId: work.still_small_cover_id ?? null,
 		stillIds
 	};
 }
 
+// Highest first, matching how the site orders works; unordered works sort last.
 function byOrderThenTitle(field) {
 	return (a, b) =>
-		(a[field] ?? Infinity) - (b[field] ?? Infinity) || a.title.localeCompare(b.title);
+		(b[field] ?? -Infinity) - (a[field] ?? -Infinity) || a.title.localeCompare(b.title);
 }
 
 // Reading back what was just written catches a dataset that is internally broken

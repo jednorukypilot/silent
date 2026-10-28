@@ -29,12 +29,15 @@ export type RawWork = {
 	listOrder: number | null;
 	homeOrder: number | null;
 	coverStillId: string | null;
+	smallCoverStillId: string | null;
 	stillIds: string[];
 };
 
 /** A work with its stills resolved, as pages consume it. */
-export type WorksData = Omit<RawWork, 'stillIds' | 'coverStillId'> & {
+export type WorksData = Omit<RawWork, 'stillIds' | 'coverStillId' | 'smallCoverStillId'> & {
 	stills: Still[];
-	/** The one still that represents this work; falls back to the first. */
+	/** The still representing this work on /works; falls back to the first. */
 	cover: Still | null;
+	/** The still the home viewer shows on small displays; falls back to the first. */
+	smallCover: Still | null;
 };

@@ -105,20 +105,35 @@ comment on column stills.aspect_ratio is
 -- enforces that every still in the work matches it.
 
 create table works (
-  id               uuid primary key default gen_random_uuid(),
-  created_at       timestamptz not null default now(),
-  name             text not null,
-  description      text,
-  description_long text,
-  year             int,
-  video_link       text,
-  aspect_ratio     numeric not null,
-  displayed        int,  -- null = not listed on /works
-  highlighted      int   -- null = not shown on the home page
+  id                   uuid primary key default gen_random_uuid(),
+  created_at           timestamptz not null default now(),
+  name                 text not null,
+  description          text,
+  description_long     text,
+  year                 int,
+  video_link           text,
+  aspect_ratio         numeric not null,
+  displayed            int,  -- null = not listed on /works
+  highlighted          int,  -- null = not shown on the home page
+  cover_still_id       uuid references stills(id) on delete set null,
+  still_small_cover_id uuid references stills(id) on delete set null
 );
 
--- displayed/highlighted deliberately carry no UNIQUE: swapping two positions
--- would otherwise need a throwaway third value. Ties break on name.
+-- Two independent covers, because the two surfaces crop differently: /works
+-- shows a preview panel, the phone viewer shows the frame full-bleed behind the
+-- title. Either one null, or pointing at a still this work does not own, falls
+-- back to the work's first still, so neither needs validating.
+
+comment on column works.cover_still_id is
+  'Still representing this work in the /works preview panel (desktop).';
+
+comment on column works.still_small_cover_id is
+  'Still shown full-bleed by the home viewer on small displays.';
+
+-- Both are read highest-first, so the top of a surface is the largest number and
+-- a new work can lead it without renumbering the rest. They deliberately carry no
+-- UNIQUE: swapping two positions would otherwise need a throwaway third value.
+-- Ties break on name.
 create index works_displayed_idx   on works (displayed)   where displayed   is not null;
 create index works_highlighted_idx on works (highlighted) where highlighted is not null;
 

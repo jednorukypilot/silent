@@ -26,13 +26,13 @@
   // Vimeo or YouTube URL behind the play action.
   "video_link": "https://vimeo.com/1182560731",
 
-  // Position in the /works list. null or missing = not listed there.
+  // Position in the /works list, highest first. null or missing = not listed.
   "displayed": 3,
 
-  // Position on the home page. null or missing = not shown there.
+  // Position on the home page, highest first. null or missing = not shown there.
   //
-  // Both are plain sort numbers, lowest first. They need not be unique or
-  // contiguous (works that tie are ordered by name), and they are independent
+  // Both are plain sort numbers read from the largest down. They need not be
+  // unique or contiguous (works that tie are ordered by name), and are independent
   // of each other: a work can be listed on /works but kept off the home page.
   "highlighted": 1,
 
@@ -41,8 +41,8 @@
   // contain is an error. Images left out still upload as part of the work.
   "stills": {
     "Dacia_still1.jpg": {
-      // Alt text. Defaults to "<name> – image <n>", n being the image's
-      // position in filename order.
+      // Alt text. Defaults to "<name> – image <nn>", nn being the image's
+      // position in filename order, zero-padded to two digits.
       "alt": "Wide shot of the car on a frozen lake",
 
       // Extra surfaces this image also backs: "hero" (home banner) and/or
@@ -55,7 +55,7 @@
       "alt": "Close-up of the dashboard at dusk"
     },
 
-    // Only placements, so alt text falls back to "Dacia – image 2":
+    // Only placements, so alt text falls back to "Dacia – image 02":
     // filename order is plain text order, and still13 sorts before still2.
     "Dacia_still13.jpg": {
       "placements": ["hero", "contact"]

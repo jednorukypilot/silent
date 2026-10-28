@@ -4,21 +4,29 @@ import type { RawWork, WorksData } from '$lib/model/types';
 
 const raw = generated as RawWork[];
 
-function hydrate({ stillIds, coverStillId, ...work }: RawWork): WorksData {
+function hydrate({ stillIds, coverStillId, smallCoverStillId, ...work }: RawWork): WorksData {
 	const stills = getStills(stillIds);
 
-	// An unset, stale or foreign cover_still_id just falls back to the first
-	// still, so nothing has to validate it.
+	// An unset, stale or foreign id just falls back to the first still, so neither
+	// column has to be validated. The two are independent: /works and the
+	// small-display home viewer can lead with different frames.
+	const pick = (id: string | null) =>
+		stills.find((still) => still.id === id) ?? stills[0] ?? null;
+
 	return {
 		...work,
 		stills,
-		cover: stills.find((still) => still.id === coverStillId) ?? stills[0] ?? null
+		cover: pick(coverStillId),
+		smallCover: pick(smallCoverStillId)
 	};
 }
 
+// Highest number first, so a new work takes the top slot by being given a number
+// above everything else instead of renumbering the works already there. Ties
+// break on title. Stills keep their own ascending sort_order; this is works only.
 function byOrder(field: 'listOrder' | 'homeOrder') {
 	return (a: RawWork, b: RawWork) =>
-		(a[field] ?? Infinity) - (b[field] ?? Infinity) || a.title.localeCompare(b.title);
+		(b[field] ?? -Infinity) - (a[field] ?? -Infinity) || a.title.localeCompare(b.title);
 }
 
 function ordered(field: 'listOrder' | 'homeOrder'): WorksData[] {

@@ -94,12 +94,12 @@
 	>
 		{#each tileData as tile, index (tile.id)}
 			<article class="relative h-full w-full shrink-0 snap-center overflow-hidden bg-black">
-				{#if tile.cover}
+				{#if tile.smallCover}
 					<ResponsiveImage
-						fileKey={tile.cover.fileKey}
-						lqip={tile.cover.lqip}
-						debugLabel={`${tile.title} cover still (${tile.cover.id})`}
-						alt={tile.cover.alt ?? `${tile.title} cover still`}
+						fileKey={tile.smallCover.fileKey}
+						lqip={tile.smallCover.lqip}
+						debugLabel={`${tile.title} small cover (${tile.smallCover.id})`}
+						alt={tile.smallCover.alt ?? `${tile.title} cover still`}
 						aspectRatio={tile.aspectRatio ?? fallbackAspectRatio}
 						sizes="100vw"
 						eager={index === 0}

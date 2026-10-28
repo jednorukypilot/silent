@@ -164,7 +164,7 @@ def plan_work_folder(work_dir: Path, allow_ratio_mismatch: bool = False) -> dict
         config = meta["stills"].get(path.name, {"alt": None, "placements": []})
         alt = config["alt"]
         if alt is None and is_work:
-            alt = f'{meta["name"]} – image {idx}'
+            alt = f'{meta["name"]} – image {idx:02d}'
 
         stills.append({
             "path": path,
